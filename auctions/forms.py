@@ -1,3 +1,5 @@
+"auctions/forms.py"
+
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
@@ -98,19 +100,39 @@ class RegisterForm(forms.ModelForm):
             ),
         }
 
+    # =====================================================
+    # EMAIL VALIDATION
+    # =====================================================
+
     def clean_email(self):
 
-        email = self.cleaned_data['email'].lower().strip()
+        email = self.cleaned_data.get('email')
 
-        if User.objects.filter(
+        if not email:
+            raise forms.ValidationError(
+                'Tafadhali weka email yako.'
+            )
+
+        # Remove spaces and make email lowercase
+        email = email.strip().lower()
+
+        # Check whether this exact email already exists
+        existing_user = User.objects.filter(
             email__iexact=email
-        ).exists():
+        ).first()
+
+        if existing_user:
 
             raise forms.ValidationError(
-                'Email hii tayari imesajiliwa. Tafadhali tumia email nyingine.'
+                'Email hii tayari imesajiliwa. '
+                'Tafadhali tumia email nyingine.'
             )
 
         return email
+
+    # =====================================================
+    # PASSWORD CONFIRMATION
+    # =====================================================
 
     def clean_password2(self):
 
@@ -127,6 +149,10 @@ class RegisterForm(forms.ModelForm):
 
         return password2
 
+    # =====================================================
+    # SAVE USER
+    # =====================================================
+
     def save(self, commit=True):
 
         user = super().save(commit=False)
@@ -134,7 +160,7 @@ class RegisterForm(forms.ModelForm):
         email = self.cleaned_data['email']
 
         # =================================================
-        # USERNAME INATENGENEZWA AUTOMATICALLY
+        # AUTOMATIC USERNAME
         # =================================================
 
         base_username = email.split('@')[0]
@@ -160,6 +186,10 @@ class RegisterForm(forms.ModelForm):
         user.set_password(
             self.cleaned_data['password1']
         )
+
+        # =================================================
+        # SAVE USER
+        # =================================================
 
         if commit:
             user.save()
@@ -200,6 +230,10 @@ class EmailLoginForm(forms.Form):
 
         super().__init__(*args, **kwargs)
 
+    # =====================================================
+    # LOGIN VALIDATION
+    # =====================================================
+
     def clean(self):
 
         cleaned_data = super().clean()
@@ -210,10 +244,12 @@ class EmailLoginForm(forms.Form):
         if not email or not password:
             return cleaned_data
 
+        email = email.strip().lower()
+
         try:
 
             user = User.objects.get(
-                email__iexact=email.strip()
+                email__iexact=email
             )
 
         except User.DoesNotExist:
@@ -237,6 +273,10 @@ class EmailLoginForm(forms.Form):
         self.user_cache = user
 
         return cleaned_data
+
+    # =====================================================
+    # GET USER
+    # =====================================================
 
     def get_user(self):
 
