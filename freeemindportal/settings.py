@@ -39,7 +39,6 @@ ALLOWED_HOSTS = [
     'freemind-auction-portal1.onrender.com',
 ]
 
-# Inasaidia kusoma host ya Render moja kwa moja kuepusha Error 400
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
@@ -96,20 +95,12 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
 
     'django.middleware.security.SecurityMiddleware',
-    
-    # WhiteNoise inatakiwa kawekwa hapa juu kusoma static files kwenye production
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
-
     'django.middleware.common.CommonMiddleware',
-
     'django.middleware.csrf.CsrfViewMiddleware',
-
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-
     'django.contrib.messages.middleware.MessageMiddleware',
-
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
@@ -129,21 +120,13 @@ TEMPLATES = [
 
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-
         'DIRS': [],
-
         'APP_DIRS': True,
-
         'OPTIONS': {
-
             'context_processors': [
-
                 'django.template.context_processors.request',
-
                 'django.contrib.auth.context_processors.auth',
-
                 'django.contrib.messages.context_processors.messages',
-
             ],
         },
     },
@@ -164,7 +147,6 @@ WSGI_APPLICATION = 'freeemindportal.wsgi.application'
 DATABASE_URL = os.environ.get('DATABASE_URL')
 
 if DATABASE_URL:
-
     DATABASES = {
         'default': dj_database_url.parse(
             DATABASE_URL,
@@ -172,18 +154,11 @@ if DATABASE_URL:
             ssl_require=True,
         )
     }
-
 else:
-
-    # Local development
     DATABASES = {
-
         'default': {
-
             'ENGINE': 'django.db.backends.sqlite3',
-
             'NAME': BASE_DIR / 'db.sqlite3',
-
         }
     }
 
@@ -193,27 +168,18 @@ else:
 # =========================================================
 
 AUTH_PASSWORD_VALIDATORS = [
-
     {
-        'NAME':
-        'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
-
     {
-        'NAME':
-        'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
-
     {
-        'NAME':
-        'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
-
     {
-        'NAME':
-        'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
-
 ]
 
 
@@ -242,7 +208,6 @@ STATICFILES_DIRS = [
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-# Mpangilio wa WhiteNoise kuhifadhi static files kwenye production
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
@@ -299,11 +264,8 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 # =========================================================
 
 if not DEBUG:
-
     SESSION_COOKIE_SECURE = True
-
     CSRF_COOKIE_SECURE = True
-
     SECURE_PROXY_SSL_HEADER = (
         'HTTP_X_FORWARDED_PROTO',
         'https'
