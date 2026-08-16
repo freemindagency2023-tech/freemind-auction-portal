@@ -4,6 +4,7 @@ Django settings for freeemindportal project.
 
 from pathlib import Path
 import os
+import dj_database_url
 
 
 # =========================================================
@@ -38,6 +39,11 @@ ALLOWED_HOSTS = [
     'freemind-auction-portal.onrender.com',
 ]
 
+ONLINE_HOST = os.environ.get('ONLINE_HOST')
+
+if ONLINE_HOST and ONLINE_HOST not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(ONLINE_HOST)
+
 
 # =========================================================
 # CSRF TRUSTED ORIGINS
@@ -50,6 +56,11 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1:8000',
     'https://freemind-auction-portal.onrender.com',
 ]
+
+ONLINE_URL = os.environ.get('ONLINE_URL')
+
+if ONLINE_URL and ONLINE_URL not in CSRF_TRUSTED_ORIGINS:
+    CSRF_TRUSTED_ORIGINS.append(ONLINE_URL)
 
 
 # =========================================================
@@ -140,16 +151,31 @@ WSGI_APPLICATION = 'freeemindportal.wsgi.application'
 # DATABASE
 # =========================================================
 
-DATABASES = {
+DATABASE_URL = os.environ.get('DATABASE_URL')
 
-    'default': {
+if DATABASE_URL:
 
-        'ENGINE': 'django.db.backends.sqlite3',
-
-        'NAME': BASE_DIR / 'db.sqlite3',
-
+    DATABASES = {
+        'default': dj_database_url.parse(
+            DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True,
+        )
     }
-}
+
+else:
+
+    # Local development
+    DATABASES = {
+
+        'default': {
+
+            'ENGINE': 'django.db.backends.sqlite3',
+
+            'NAME': BASE_DIR / 'db.sqlite3',
+
+        }
+    }
 
 
 # =========================================================
@@ -253,6 +279,22 @@ DEFAULT_FROM_EMAIL = os.environ.get(
     'DEFAULT_FROM_EMAIL',
     'Freemind Auction Agency <freemindagency2023@gmail.com>'
 )
+
+
+# =========================================================
+# PRODUCTION SECURITY
+# =========================================================
+
+if not DEBUG:
+
+    SESSION_COOKIE_SECURE = True
+
+    CSRF_COOKIE_SECURE = True
+
+    SECURE_PROXY_SSL_HEADER = (
+        'HTTP_X_FORWARDED_PROTO',
+        'https'
+    )
 
 
 # =========================================================
