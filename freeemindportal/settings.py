@@ -35,12 +35,8 @@ DEBUG = os.environ.get(
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
+    'freemind-auction-portal.onrender.com',
 ]
-
-ONLINE_HOST = os.environ.get('ONLINE_HOST')
-
-if ONLINE_HOST:
-    ALLOWED_HOSTS.append(ONLINE_HOST)
 
 
 # =========================================================
@@ -52,12 +48,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'https://freemind-auction-portal.onrender.com',
 ]
-
-ONLINE_URL = os.environ.get('ONLINE_URL')
-
-if ONLINE_URL:
-    CSRF_TRUSTED_ORIGINS.append(ONLINE_URL)
 
 
 # =========================================================
