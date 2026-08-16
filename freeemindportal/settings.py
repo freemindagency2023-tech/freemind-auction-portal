@@ -37,6 +37,7 @@ ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
     'freemind-auction-portal1.onrender.com',
+    '*',
 ]
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
@@ -49,7 +50,7 @@ if ONLINE_HOST and ONLINE_HOST not in ALLOWED_HOSTS:
 
 
 # =========================================================
-# CSRF TRUSTED ORIGINS
+# CSRF TRUSTED ORIGINS & PROXY
 # =========================================================
 
 CSRF_TRUSTED_ORIGINS = [
@@ -67,6 +68,8 @@ if RENDER_EXTERNAL_HOSTNAME:
 ONLINE_URL = os.environ.get('ONLINE_URL')
 if ONLINE_URL and ONLINE_URL not in CSRF_TRUSTED_ORIGINS:
     CSRF_TRUSTED_ORIGINS.append(ONLINE_URL)
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 
 # =========================================================
@@ -285,10 +288,6 @@ DEFAULT_FROM_EMAIL = os.environ.get(
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    SECURE_PROXY_SSL_HEADER = (
-        'HTTP_X_FORWARDED_PROTO',
-        'https'
-    )
 
 
 # =========================================================
