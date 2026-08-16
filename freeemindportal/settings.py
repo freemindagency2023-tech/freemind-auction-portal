@@ -36,11 +36,15 @@ DEBUG = os.environ.get(
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    'freemind-auction-portal.onrender.com',
+    'freemind-auction-portal1.onrender.com',
 ]
 
-ONLINE_HOST = os.environ.get('ONLINE_HOST')
+# Inasaidia kusoma host ya Render moja kwa moja kuepusha Error 400
+RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
+ONLINE_HOST = os.environ.get('ONLINE_HOST')
 if ONLINE_HOST and ONLINE_HOST not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append(ONLINE_HOST)
 
@@ -54,11 +58,14 @@ CSRF_TRUSTED_ORIGINS = [
     'http://127.0.0.1',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
-    'https://freemind-auction-portal.onrender.com',
+    'https://freemind-auction-portal1.onrender.com',
+    'https://*.onrender.com',
 ]
 
-ONLINE_URL = os.environ.get('ONLINE_URL')
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS.append(f'https://{RENDER_EXTERNAL_HOSTNAME}')
 
+ONLINE_URL = os.environ.get('ONLINE_URL')
 if ONLINE_URL and ONLINE_URL not in CSRF_TRUSTED_ORIGINS:
     CSRF_TRUSTED_ORIGINS.append(ONLINE_URL)
 
@@ -89,6 +96,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
 
     'django.middleware.security.SecurityMiddleware',
+    
+    # WhiteNoise inatakiwa kawekwa hapa juu kusoma static files kwenye production
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
 
@@ -231,6 +241,9 @@ STATICFILES_DIRS = [
 ]
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Mpangilio wa WhiteNoise kuhifadhi static files kwenye production
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
 # =========================================================

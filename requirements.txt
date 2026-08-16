@@ -7,3 +7,4 @@ tzdata==2026.3
 gunicorn
 psycopg[binary]
 dj-database-url
+whitenoise
