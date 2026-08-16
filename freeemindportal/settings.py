@@ -273,6 +273,19 @@ if not DEBUG:
 
 
 # =========================================================
+# JAZZMIN SETTINGS
+# =========================================================
+
+JAZZMIN_SETTINGS = {
+    "site_title": "Freemind Auction Admin",
+    "site_header": "Freemind Auction",
+    "site_brand": "Freemind Portal",
+    "welcome_sign": "Karibu kwenye Freemind Auction Admin Portal",
+    "copyright": "Freemind Agency",
+}
+
+
+# =========================================================
 # DEFAULT PRIMARY KEY
 # =========================================================
 
