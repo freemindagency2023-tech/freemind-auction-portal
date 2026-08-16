@@ -1,0 +1,14 @@
+{% extends 'auctions/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Rekebisha Dau Lako (Edit Bid)</h2>
+    <p>Bidhaa: <strong>{{ item.title }}</strong></p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Hifadhi Mabadiliko</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Ghairi</a>
+    </form>
+</div>
+{% endblock %}

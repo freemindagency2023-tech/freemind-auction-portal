@@ -1,0 +1,13 @@
+{% extends 'auctions/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Futa Dau (Delete Bid)</h2>
+    <p>Je, una uhakika unataka kufuta dau lako la kiasi cha <strong>TZS {{ bid.amount }}</strong> kwa ajili ya bidhaa <strong>{{ bid.item.title }}</strong>?</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Ndiyo, Futa</button>
+        <a href="{% url 'dashboard' %}" class="btn btn-secondary">Ghairi</a>
+    </form>
+</div>
+{% endblock %}

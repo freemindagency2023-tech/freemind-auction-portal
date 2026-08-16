@@ -1,0 +1,584 @@
+{% extends 'auctions/base.html' %}
+
+{% block title %}
+Jisajili | Freemind Auction
+{% endblock %}
+
+{% block content %}
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+
+<style>
+
+    .register-wrapper {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        max-width: 520px;
+        margin: 40px auto;
+    }
+
+
+    .register-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 40px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+
+
+    .register-icon-box {
+        width: 60px;
+        height: 60px;
+        background: #e0f2fe;
+        color: #0284c7;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+
+    .register-card h1 {
+        font-weight: 800 !important;
+        font-size: 1.8rem !important;
+        color: #0f172a !important;
+        margin: 0 0 8px 0 !important;
+        letter-spacing: -0.5px;
+    }
+
+
+    .register-card p.subtitle {
+        color: #64748b !important;
+        font-size: 0.9rem;
+        margin-bottom: 25px !important;
+    }
+
+
+    /* FORM */
+
+    .register-form p {
+        text-align: left;
+        margin-bottom: 18px;
+    }
+
+
+    .register-form label {
+        display: block;
+        font-weight: 700 !important;
+        font-size: 0.85rem;
+        color: #0f172a;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+
+    .register-form input[type="text"],
+    .register-form input[type="password"],
+    .register-form input[type="email"] {
+
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: inherit;
+        box-sizing: border-box;
+        transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease;
+
+        background-color: #f8fafc;
+    }
+
+
+    .register-form input:focus {
+
+        outline: none;
+        background-color: #ffffff;
+        border-color: #0284c7;
+
+        box-shadow:
+            0 0 0 3px
+            rgba(2, 132, 199, 0.15);
+    }
+
+
+    /* HELP TEXT */
+
+    .register-form .helptext,
+    .register-form ul {
+
+        font-size: 0.775rem;
+        color: #64748b;
+        text-align: left;
+        margin-top: 5px;
+        padding-left: 15px;
+    }
+
+
+    /* ERRORS */
+
+    .register-form .errorlist {
+
+        color: #dc2626;
+        font-size: 0.8rem;
+        text-align: left;
+        margin: 5px 0 10px 0;
+        padding-left: 18px;
+    }
+
+
+    /* PASSWORD TOGGLE */
+
+    .password-wrapper {
+        position: relative;
+    }
+
+
+    .password-wrapper input {
+        padding-right: 50px !important;
+    }
+
+
+    .toggle-password-btn {
+
+        position: absolute;
+
+        right: 10px;
+        top: 50%;
+
+        transform: translateY(-50%);
+
+        background: none;
+        border: none;
+
+        color: #64748b;
+
+        cursor: pointer;
+
+        font-size: 1rem;
+
+        padding: 6px 8px;
+    }
+
+
+    .toggle-password-btn:hover {
+        color: #0284c7;
+    }
+
+
+    /* SUBMIT */
+
+    .btn-register-submit {
+
+        width: 100%;
+
+        background: #0f172a;
+
+        color: #ffffff !important;
+
+        padding: 14px;
+
+        border: none;
+
+        border-radius: 10px;
+
+        font-weight: 800 !important;
+
+        font-size: 0.95rem;
+
+        cursor: pointer;
+
+        transition: all 0.2s ease;
+
+        margin-top: 10px;
+
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 8px;
+    }
+
+
+    .btn-register-submit:hover {
+
+        background: #0284c7;
+
+        transform: translateY(-1px);
+    }
+
+
+    /* LOGIN FOOTER */
+
+    .register-footer {
+
+        margin-top: 25px;
+
+        padding-top: 20px;
+
+        border-top: 1px solid #f1f5f9;
+
+        font-size: 0.875rem;
+
+        color: #64748b;
+    }
+
+
+    .register-footer a {
+
+        color: #0284c7;
+
+        font-weight: 700;
+
+        text-decoration: none;
+    }
+
+
+    .register-footer a:hover {
+        text-decoration: underline;
+    }
+
+
+    /* FIRST NAME / LAST NAME */
+
+    .name-row {
+
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 15px;
+    }
+
+
+    @media (max-width: 600px) {
+
+        .register-card {
+            padding: 30px 20px;
+        }
+
+        .name-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+        }
+    }
+
+</style>
+
+
+<div class="register-wrapper">
+
+    <div class="register-card">
+
+
+        <!-- ICON -->
+
+        <div class="register-icon-box">
+
+            <i class="fa-solid fa-user-plus"></i>
+
+        </div>
+
+
+        <!-- TITLE -->
+
+        <h1>
+            Fungua Akaunti
+        </h1>
+
+        <p class="subtitle">
+            Jaza taarifa zako ili kujiunga na mfumo wetu
+        </p>
+
+
+        <!-- FORM -->
+
+        <form
+            method="post"
+            class="register-form"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- GENERAL ERRORS -->
+
+            {% if form.non_field_errors %}
+
+                {{ form.non_field_errors }}
+
+            {% endif %}
+
+
+            <!-- FIRST NAME + LAST NAME -->
+
+            <div class="name-row">
+
+                <div>
+
+                    <p>
+
+                        <label
+                            for="{{ form.first_name.id_for_label }}"
+                        >
+                            First Name
+                        </label>
+
+                        {{ form.first_name }}
+
+                        {{ form.first_name.errors }}
+
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <p>
+
+                        <label
+                            for="{{ form.last_name.id_for_label }}"
+                        >
+                            Last Name
+                        </label>
+
+                        {{ form.last_name }}
+
+                        {{ form.last_name.errors }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <p>
+
+                <label
+                    for="{{ form.email.id_for_label }}"
+                >
+                    Email Address
+                </label>
+
+                {{ form.email }}
+
+                {{ form.email.errors }}
+
+            </p>
+
+
+            <!-- USERNAME -->
+
+            <p>
+
+                <label
+                    for="{{ form.username.id_for_label }}"
+                >
+                    Username
+                </label>
+
+                {{ form.username }}
+
+                {{ form.username.errors }}
+
+            </p>
+
+
+            <!-- PASSWORD -->
+
+            <p>
+
+                <label
+                    for="{{ form.password1.id_for_label }}"
+                >
+                    Password
+                </label>
+
+                <div class="password-wrapper">
+
+                    {{ form.password1 }}
+
+                    <button
+                        type="button"
+                        class="toggle-password-btn"
+                        data-target="{{ form.password1.id_for_label }}"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+
+                </div>
+
+                {{ form.password1.errors }}
+
+                {% if form.password1.help_text %}
+
+                    <div class="helptext">
+                        {{ form.password1.help_text }}
+                    </div>
+
+                {% endif %}
+
+            </p>
+
+
+            <!-- CONFIRM PASSWORD -->
+
+            <p>
+
+                <label
+                    for="{{ form.password2.id_for_label }}"
+                >
+                    Confirm Password
+                </label>
+
+                <div class="password-wrapper">
+
+                    {{ form.password2 }}
+
+                    <button
+                        type="button"
+                        class="toggle-password-btn"
+                        data-target="{{ form.password2.id_for_label }}"
+                    >
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+
+                </div>
+
+                {{ form.password2.errors }}
+
+            </p>
+
+
+            <!-- SUBMIT -->
+
+            <button
+                type="submit"
+                class="btn-register-submit"
+            >
+
+                JISAJILI
+
+                <i class="fa-solid fa-check"></i>
+
+            </button>
+
+
+        </form>
+
+
+        <!-- LOGIN -->
+
+        <div class="register-footer">
+
+            Una akaunti tayari?
+
+            <a href="{% url 'login' %}">
+                Ingia Hapa
+            </a>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- PASSWORD SHOW / HIDE -->
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    function () {
+
+        const buttons =
+            document.querySelectorAll(
+                ".toggle-password-btn"
+            );
+
+
+        buttons.forEach(
+            function (button) {
+
+                button.addEventListener(
+                    "click",
+                    function () {
+
+                        const targetId =
+                            button.getAttribute(
+                                "data-target"
+                            );
+
+                        const passwordInput =
+                            document.getElementById(
+                                targetId
+                            );
+
+                        const icon =
+                            button.querySelector(
+                                "i"
+                            );
+
+
+                        if (
+                            passwordInput.type ===
+                            "password"
+                        ) {
+
+                            passwordInput.type =
+                                "text";
+
+                            icon.classList.remove(
+                                "fa-eye"
+                            );
+
+                            icon.classList.add(
+                                "fa-eye-slash"
+                            );
+
+                        }
+
+                        else {
+
+                            passwordInput.type =
+                                "password";
+
+                            icon.classList.remove(
+                                "fa-eye-slash"
+                            );
+
+                            icon.classList.add(
+                                "fa-eye"
+                            );
+
+                        }
+
+                    }
+                );
+
+            }
+        );
+
+    }
+);
+
+</script>
+
+{% endblock %}

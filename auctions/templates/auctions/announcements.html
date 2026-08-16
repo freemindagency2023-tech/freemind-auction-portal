@@ -1,0 +1,27 @@
+{% extends 'auctions/base.html' %}
+
+{% block content %}
+
+<h1>Auction Announcements</h1>
+
+{% for announcement in announcements %}
+
+<div class="card">
+
+    <h2>{{ announcement.title }}</h2>
+
+    <p>{{ announcement.content }}</p>
+
+    <small>
+        Published: {{ announcement.created_at }}
+    </small>
+
+</div>
+
+{% empty %}
+
+<p>No announcements available.</p>
+
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,224 @@
+{% extends 'auctions/base.html' %}
+
+{% block title %}Login | Freemind Auction{% endblock %}
+
+{% block content %}
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    .login-wrapper {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        max-width: 450px;
+        margin: 40px auto;
+    }
+
+    .login-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 40px 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        text-align: center;
+    }
+
+    .login-icon-box {
+        width: 60px;
+        height: 60px;
+        background: #e0f2fe;
+        color: #0284c7;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .login-card h1 {
+        font-weight: 800 !important;
+        font-size: 1.8rem !important;
+        color: #0f172a !important;
+        margin: 0 0 8px 0 !important;
+        letter-spacing: -0.5px;
+    }
+
+    .login-card p.subtitle {
+        color: #64748b !important;
+        font-size: 0.9rem;
+        margin-bottom: 25px !important;
+    }
+
+    /* FORM STYLING */
+    .login-form p {
+        text-align: left;
+        margin-bottom: 20px;
+    }
+
+    .login-form label {
+        display: block;
+        font-weight: 700 !important;
+        font-size: 0.85rem;
+        color: #0f172a;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .login-form input[type="text"],
+    .login-form input[type="password"],
+    .login-form input[type="email"] {
+        width: 100%;
+        padding: 12px 16px;
+        border: 1px solid #cbd5e1;
+        border-radius: 10px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: inherit;
+        box-sizing: border-box;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        background-color: #f8fafc;
+    }
+
+    .login-form input:focus {
+        outline: none;
+        background-color: #ffffff;
+        border-color: #0284c7;
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+    }
+
+    /* PASSWORD TOGGLE CONTAINER */
+    .password-group {
+        position: relative;
+    }
+
+    .toggle-password-btn {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #64748b;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 4px 8px;
+    }
+
+    .toggle-password-btn:hover {
+        color: #0284c7;
+    }
+
+    /* SUBMIT BUTTON */
+    .btn-login-submit {
+        width: 100%;
+        background: #0f172a;
+        color: #ffffff !important;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        font-weight: 800 !important;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-top: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .btn-login-submit:hover {
+        background: #0284c7;
+        transform: translateY(-1px);
+    }
+
+    /* REGISTER & FORGOT FOOTER LINKS */
+    .login-footer {
+        margin-top: 25px;
+        padding-top: 20px;
+        border-top: 1px solid #f1f5f9;
+        font-size: 0.875rem;
+        color: #64748b;
+    }
+
+    .login-footer a {
+        color: #0284c7;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .login-footer a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="login-wrapper">
+
+    <div class="login-card">
+        
+        <div class="login-icon-box">
+            <i class="fa-solid fa-user-lock"></i>
+        </div>
+
+        <h1>Karibu Tena</h1>
+        <p class="subtitle">Ingiza taarifa zako ili kuingia kwenye akaunti yako</p>
+
+        <form method="post" class="login-form">
+            {% csrf_token %}
+
+            <!-- Form fields za Django zikitolewa moja kwa moja -->
+            {{ form.as_p }}
+
+            <!-- SEHEMU YA KUSAHAU PASSWORD -->
+            <div style="text-align: right; margin-top: -10px; margin-bottom: 15px;">
+                <a href="{% url 'password_reset' %}" style="font-size: 0.8rem; color: #64748b; text-decoration: none; font-weight: 600;">Umesahau Password?</a>
+            </div>
+
+            <button type="submit" class="btn-login-submit">
+                LOGIN <i class="fa-solid fa-right-to-bracket"></i>
+            </button>
+        </form>
+
+        <div class="login-footer">
+            Huna akaunti bado? <a href="/accounts/register/">Jisajili Hapa</a>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- JavaScript ya kuwezesha kitufe cha kijicho kwenye input ya password ya Django -->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const passwordInput = document.querySelector('input[name="password"]');
+        
+        if (passwordInput) {
+            const parentDiv = passwordInput.parentElement;
+            parentDiv.style.position = "relative";
+
+            const toggleBtn = document.createElement("button");
+            toggleBtn.type = "button";
+            toggleBtn.className = "toggle-password-btn";
+            toggleBtn.innerHTML = '<i class="fa-solid fa-eye" id="eyeIcon"></i>';
+            
+            parentDiv.appendChild(toggleBtn);
+
+            toggleBtn.addEventListener("click", function () {
+                const eyeIcon = document.getElementById("eyeIcon");
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    eyeIcon.classList.remove("fa-eye");
+                    eyeIcon.classList.add("fa-eye-slash");
+                } else {
+                    passwordInput.type = "password";
+                    eyeIcon.classList.remove("fa-eye-slash");
+                    eyeIcon.classList.add("fa-eye");
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

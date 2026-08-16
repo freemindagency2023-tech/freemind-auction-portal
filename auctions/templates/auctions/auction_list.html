@@ -1,0 +1,275 @@
+{% extends 'auctions/base.html' %}
+
+{% block title %}Auctions | Freemind Auction{% endblock %}
+
+{% block content %}
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    .auctions-page-wrapper {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        color: #0f172a;
+    }
+
+    /* HEADER SECTION */
+    .page-header {
+        background: #ffffff;
+        padding: 30px;
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+    }
+
+    .page-header h1 {
+        font-weight: 800 !important;
+        font-size: 2rem !important;
+        color: #0f172a !important;
+        letter-spacing: -0.5px;
+        margin: 0 0 8px 0 !important;
+    }
+
+    .page-header p {
+        font-weight: 600 !important;
+        color: #64748b !important;
+        font-size: 1rem;
+        margin: 0 !important;
+    }
+
+    /* GRID YA CARDS */
+    .auction-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    /* AUCTION CARD */
+    .auction-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        transition: all 0.25s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .auction-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+        border-color: #cbd5e1;
+    }
+
+    /* IMAGE CONTAINER */
+    .image-container {
+        position: relative;
+        height: 220px;
+        width: 100%;
+        overflow: hidden;
+        background: #f1f5f9;
+    }
+
+    .item-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .auction-card:hover .item-image {
+        transform: scale(1.04);
+    }
+
+    /* PLACEHOLDER KAMA PICHA HAKUNA KABISA */
+    .no-image-placeholder {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        color: #64748b;
+        gap: 8px;
+    }
+
+    .no-image-placeholder i {
+        font-size: 2.5rem;
+        color: #0284c7;
+    }
+
+    .no-image-placeholder span {
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* STATUS BADGE */
+    .status-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: #0284c7;
+        color: #ffffff;
+        font-weight: 800 !important;
+        font-size: 0.75rem;
+        padding: 5px 12px;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        z-index: 2;
+    }
+
+    /* CARD CONTENT */
+    .card-content {
+        padding: 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-title {
+        font-weight: 800 !important;
+        font-size: 1.3rem !important;
+        color: #0f172a !important;
+        margin: 0 0 10px 0 !important;
+        line-height: 1.3;
+    }
+
+    .card-desc {
+        color: #475569 !important;
+        font-size: 0.925rem;
+        font-weight: 500 !important;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    /* PRICE BOX */
+    .price-box {
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+        padding: 12px 16px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .price-label {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: #64748b;
+        text-transform: uppercase;
+    }
+
+    .price-value {
+        font-size: 1.1rem;
+        font-weight: 800 !important;
+        color: #0284c7;
+    }
+
+    /* BUTTON */
+    .btn-auction {
+        background: #0f172a;
+        color: #ffffff !important;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 800 !important;
+        font-size: 0.9rem;
+        text-decoration: none;
+        text-align: center;
+        display: block;
+        transition: background 0.2s ease;
+    }
+
+    .btn-auction:hover {
+        background: #0284c7;
+    }
+
+    /* EMPTY STATE */
+    .empty-card {
+        grid-column: 1 / -1;
+        background: #ffffff;
+        border: 2px dashed #cbd5e1;
+        border-radius: 16px;
+        padding: 50px 20px;
+        text-align: center;
+    }
+</style>
+
+<div class="auctions-page-wrapper">
+
+    <!-- PAGE HEADER -->
+    <div class="page-header">
+        <h1>Available Auctions</h1>
+        <p>Browse our available auction items and view their details.</p>
+    </div>
+
+    <!-- AUCTION GRID -->
+    <div class="auction-grid">
+        {% for auction in auctions %}
+            <div class="auction-card">
+                
+                <!-- IMAGE OR PLACEHOLDER -->
+                <div class="image-container">
+                    <span class="status-badge">AUCTION</span>
+
+                    {% if auction.image %}
+                        <img src="{{ auction.image.url }}" alt="{{ auction.title }}" class="item-image">
+                    {% elif auction.items.first.image %}
+                        <img src="{{ auction.items.first.image.url }}" alt="{{ auction.title }}" class="item-image">
+                    {% else %}
+                        <div class="no-image-placeholder">
+                            <i class="fa-solid fa-gavel"></i>
+                            <span>No Image Available</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- CARD CONTENT -->
+                <div class="card-content">
+                    <div>
+                        <h2 class="card-title">{{ auction.title }}</h2>
+                        <p class="card-desc">
+                            {{ auction.description|truncatewords:20 }}
+                        </p>
+                    </div>
+
+                    <div>
+                        {% if auction.starting_price %}
+                            <div class="price-box">
+                                <span class="price-label">Starting Price</span>
+                                <span class="price-value">TZS {{ auction.starting_price }}</span>
+                            </div>
+                        {% elif auction.items.first.starting_price %}
+                            <div class="price-box">
+                                <span class="price-label">Starting Price</span>
+                                <span class="price-value">TZS {{ auction.items.first.starting_price }}</span>
+                            </div>
+                        {% endif %}
+
+                        <a href="{% url 'auction_detail' auction.id %}" class="btn-auction">
+                            View Auction <i class="fa-solid fa-arrow-right" style="margin-left: 5px;"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        {% empty %}
+            <div class="empty-card">
+                <i class="fa-solid fa-box-open" style="font-size: 3rem; color: #94a3b8; margin-bottom: 15px;"></i>
+                <h2 style="font-weight: 800; color: #0f172a; margin: 0 0 8px 0;">No Auctions Available</h2>
+                <p style="color: #64748b; font-weight: 600; margin: 0;">There are currently no active auctions to display.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

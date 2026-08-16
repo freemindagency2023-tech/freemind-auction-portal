@@ -1,0 +1,401 @@
+{% extends 'auctions/base.html' %}
+
+{% block title %}{{ auction.title }} | Freemind Auction{% endblock %}
+
+{% block content %}
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    .detail-wrapper {
+        font-family: 'Plus Jakarta Sans', sans-serif !important;
+        color: #0f172a;
+    }
+
+    /* HERO / HEADER SECTION */
+    .detail-hero {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        color: #ffffff;
+        padding: 40px 30px;
+        border-radius: 20px;
+        margin-bottom: 35px;
+        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.12);
+    }
+
+    .detail-hero h1 {
+        font-weight: 800 !important;
+        font-size: 2.2rem !important;
+        color: #ffffff !important;
+        margin: 0 0 10px 0 !important;
+        letter-spacing: -0.5px;
+    }
+
+    .detail-hero p.desc {
+        color: #94a3b8 !important;
+        font-size: 1.05rem;
+        font-weight: 500 !important;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        max-width: 800px;
+    }
+
+    .hero-meta {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .meta-badge {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #e2e8f0;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* SECTION TITLE */
+    .section-title {
+        font-weight: 800 !important;
+        font-size: 1.6rem !important;
+        color: #0f172a !important;
+        letter-spacing: -0.4px;
+        margin-bottom: 25px !important;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    /* ITEMS GRID */
+    .auction-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+        margin-bottom: 35px;
+    }
+
+    /* ITEM CARD */
+    .item-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+        transition: all 0.25s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .item-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+        border-color: #cbd5e1;
+    }
+
+    /* IMAGE CONTAINER */
+    .image-container {
+        position: relative;
+        height: 220px;
+        width: 100%;
+        background: #f1f5f9;
+        overflow: hidden;
+    }
+
+    .item-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .item-card:hover .item-image {
+        transform: scale(1.04);
+    }
+
+    .no-image-placeholder {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        color: #64748b;
+        gap: 8px;
+    }
+
+    .no-image-placeholder i {
+        font-size: 2.5rem;
+        color: #0284c7;
+    }
+
+    .no-image-placeholder span {
+        font-size: 0.85rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .status-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: #0284c7;
+        color: #ffffff;
+        font-weight: 800 !important;
+        font-size: 0.75rem;
+        padding: 5px 12px;
+        border-radius: 20px;
+        letter-spacing: 0.5px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    /* CARD CONTENT */
+    .card-content {
+        padding: 22px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .item-title {
+        font-weight: 800 !important;
+        font-size: 1.3rem !important;
+        color: #0f172a !important;
+        margin: 0 0 8px 0 !important;
+        line-height: 1.3;
+    }
+
+    .item-desc {
+        color: #475569 !important;
+        font-size: 0.9rem;
+        font-weight: 500 !important;
+        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    .condition-tag {
+        display: inline-block;
+        background: #f1f5f9;
+        color: #475569;
+        font-size: 0.8rem;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 6px;
+        margin-bottom: 15px;
+    }
+
+    /* PRICE & BIDS BOX */
+    .prices-container {
+        background: #f8fafc;
+        border: 1px solid #f1f5f9;
+        border-radius: 12px;
+        padding: 14px;
+        margin-bottom: 20px;
+    }
+
+    .price-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+
+    .price-row:last-child {
+        margin-bottom: 0;
+        padding-top: 8px;
+        border-top: 1px dashed #e2e8f0;
+    }
+
+    .price-label {
+        font-size: 0.75rem;
+        font-weight: 800;
+        color: #64748b;
+        text-transform: uppercase;
+    }
+
+    .price-val {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: #0f172a;
+    }
+
+    .highest-bid-val {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #0284c7;
+    }
+
+    /* BUTTONS */
+    .btn-action {
+        background: #0f172a;
+        color: #ffffff !important;
+        padding: 12px;
+        border-radius: 10px;
+        font-weight: 800 !important;
+        font-size: 0.9rem;
+        text-decoration: none;
+        text-align: center;
+        display: block;
+        transition: background 0.2s ease;
+    }
+
+    .btn-action:hover {
+        background: #0284c7;
+    }
+
+    .btn-login {
+        background: #0284c7;
+    }
+
+    .btn-login:hover {
+        background: #0369a1;
+    }
+
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #ffffff;
+        color: #0f172a !important;
+        border: 1px solid #cbd5e1;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 700 !important;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .btn-back:hover {
+        background: #f1f5f9;
+        border-color: #94a3b8;
+    }
+
+    .empty-box {
+        grid-column: 1 / -1;
+        background: #ffffff;
+        border: 2px dashed #cbd5e1;
+        border-radius: 16px;
+        padding: 40px 20px;
+        text-align: center;
+    }
+</style>
+
+<div class="detail-wrapper">
+
+    <!-- HERO SECTION -->
+    <div class="detail-hero">
+        <h1>{{ auction.title }}</h1>
+        {% if auction.description %}
+            <p class="desc">{{ auction.description }}</p>
+        {% endif %}
+
+        <div class="hero-meta">
+            {% if auction.location %}
+                <span class="meta-badge">
+                    <i class="fa-solid fa-location-dot" style="color: #38bdf8;"></i> {{ auction.location }}
+                </span>
+            {% endif %}
+            {% if auction.status %}
+                <span class="meta-badge">
+                    <i class="fa-solid fa-circle-info" style="color: #38bdf8;"></i> {{ auction.status }}
+                </span>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ITEMS TITLE -->
+    <h2 class="section-title">
+        <i class="fa-solid fa-box-open" style="color: #0284c7;"></i> Auction Items
+    </h2>
+
+    <!-- ITEMS GRID -->
+    <div class="auction-grid">
+        {% for item in items %}
+            <div class="item-card">
+                
+                <!-- IMAGE -->
+                <div class="image-container">
+                    <span class="status-badge">{{ auction.status|default:"Auction" }}</span>
+
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="item-image">
+                    {% else %}
+                        <div class="no-image-placeholder">
+                            <i class="fa-solid fa-box"></i>
+                            <span>No Image Available</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- CONTENT -->
+                <div class="card-content">
+                    <div>
+                        <h2 class="item-title">{{ item.name }}</h2>
+                        
+                        {% if item.description %}
+                            <p class="item-desc">{{ item.description }}</p>
+                        {% endif %}
+
+                        {% if item.condition %}
+                            <div class="condition-tag">
+                                <strong>Condition:</strong> {{ item.condition }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <!-- PRICES BOX -->
+                        <div class="prices-container">
+                            <div class="price-row">
+                                <span class="price-label">Starting Price</span>
+                                <span class="price-val">TZS {{ item.starting_price }}</span>
+                            </div>
+
+                            {% with highest_bid=item.bids.first %}
+                                <div class="price-row">
+                                    <span class="price-label">Highest Bid</span>
+                                    {% if highest_bid %}
+                                        <span class="highest-bid-val">TZS {{ highest_bid.amount }}</span>
+                                    {% else %}
+                                        <span class="price-val" style="color: #64748b; font-size: 0.85rem;">No bids yet</span>
+                                    {% endif %}
+                                </div>
+                            {% endwith %}
+                        </div>
+
+                        <!-- BID BUTTON -->
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'place_bid' item.id %}" class="btn-action">
+                                Place Bid <i class="fa-solid fa-gavel" style="margin-left: 5px;"></i>
+                            </a>
+                        {% else %}
+                            <a href="/accounts/login/" class="btn-action btn-login">
+                                Login to Place Bid
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        {% empty %}
+            <div class="empty-box">
+                <i class="fa-solid fa-box-open" style="font-size: 2.5rem; color: #94a3b8; margin-bottom: 12px;"></i>
+                <h3 style="margin: 0 0 6px 0; font-weight: 800; color: #0f172a;">No Items Found</h3>
+                <p style="margin: 0; color: #64748b; font-weight: 600;">There are currently no items added in this auction.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- BACK BUTTON -->
+    <a href="{% url 'auction_list' %}" class="btn-back">
+        <i class="fa-solid fa-arrow-left"></i> Back to Auctions
+    </a>
+
+</div>
+{% endblock %}
