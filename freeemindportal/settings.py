@@ -18,11 +18,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # =========================================================
 
 SECRET_KEY = os.environ.get(
-    'DJANGO_SECRET_KEY',
-    'django-insecure-development-key-change-in-production'
+    'SECRET_KEY',
+    'django-insecure-development-only-key'
 )
 
-DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
+DEBUG = os.environ.get(
+    'DEBUG',
+    'False'
+).lower() == 'true'
 
 
 # =========================================================
@@ -34,8 +37,6 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
 ]
 
-
-# Add online host when hosting gives us the domain
 ONLINE_HOST = os.environ.get('ONLINE_HOST')
 
 if ONLINE_HOST:
@@ -43,7 +44,7 @@ if ONLINE_HOST:
 
 
 # =========================================================
-# CSRF
+# CSRF TRUSTED ORIGINS
 # =========================================================
 
 CSRF_TRUSTED_ORIGINS = [
@@ -248,7 +249,7 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = os.environ.get(
     'EMAIL_HOST_USER',
-    'freemindagency2023@gmail.com'
+    ''
 )
 
 EMAIL_HOST_PASSWORD = os.environ.get(
