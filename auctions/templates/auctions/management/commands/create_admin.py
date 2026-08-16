@@ -1,52 +1,24 @@
 import os
-
-from django.core.management.base import BaseCommand
+import django
 from django.contrib.auth import get_user_model
 
+# Weka mipangilio ya Django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'freeemindportal.settings')
+django.setup()
 
-class Command(BaseCommand):
+User = get_user_model()
 
-    help = "Create or update the Django admin superuser"
+# Taarifa za admin uliyozitaka
+username = 'freemindagency2023@gmail.com'
+email = 'freemindagency2023@gmail.com'
+password = 'amreen'
 
-    def handle(self, *args, **options):
-
-        User = get_user_model()
-
-        username = os.environ.get("ADMIN_USERNAME")
-        email = os.environ.get("ADMIN_EMAIL")
-        password = os.environ.get("ADMIN_PASSWORD")
-
-        if not username or not email or not password:
-            self.stdout.write(
-                self.style.ERROR(
-                    "ADMIN_USERNAME, ADMIN_EMAIL and ADMIN_PASSWORD "
-                    "environment variables are required."
-                )
-            )
-            return
-
-        user, created = User.objects.get_or_create(
-            username=username,
-            defaults={
-                "email": email,
-            }
-        )
-
-        user.email = email
-        user.is_staff = True
-        user.is_superuser = True
-        user.set_password(password)
-        user.save()
-
-        if created:
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"Admin user '{username}' created successfully."
-                )
-            )
-        else:
-            self.stdout.write(
-                self.style.SUCCESS(
-                    f"Admin user '{username}' updated successfully."
-                )
-            )
+if not User.objects.filter(username=username).exists():
+    User.objects.create_superuser(username=username, email=email, password=password)
+    print(f"Akaunti ya Admin '{username}' imetengenezwa kwa mafanikio!")
+else:
+    # Kama tayari ipo, inahakikisha password inajisasisha kuwa hiyo hiyo
+    admin_user = User.objects.get(username=username)
+    admin_user.set_password(password)
+    admin_user.save()
+    print(f"Akaunti ya Admin '{username}' imesasishwa kikamilifu!")
