@@ -5,7 +5,14 @@ from django.contrib.auth.views import LoginView
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import BidForm, RegisterForm, EmailLoginForm
-from .models import Auction, Item, Bid, Announcement
+from .models import (
+    Category,
+    SubCategory,
+    Auction,
+    Item,
+    Bid,
+    Announcement,
+)
 
 
 # =========================================================
@@ -62,12 +69,101 @@ def home(request):
         '-created_at'
     )
 
+    categories = Category.objects.all().order_by(
+        'name'
+    )
+
     return render(
         request,
         'auctions/home.html',
         {
             'auctions': auctions,
             'announcements': announcements,
+            'categories': categories,
+        }
+    )
+
+
+# =========================================================
+# CATEGORY LIST
+# =========================================================
+
+def category_list(request):
+
+    categories = Category.objects.prefetch_related(
+        'subcategories'
+    ).order_by(
+        'name'
+    )
+
+    return render(
+        request,
+        'auctions/category_list.html',
+        {
+            'categories': categories,
+        }
+    )
+
+
+# =========================================================
+# CATEGORY DETAIL
+# =========================================================
+
+def category_detail(request, category_id):
+
+    category = get_object_or_404(
+        Category,
+        id=category_id
+    )
+
+    subcategories = category.subcategories.all().order_by(
+        'name'
+    )
+
+    selected_subcategory = request.GET.get(
+        'subcategory'
+    )
+
+    items = Item.objects.filter(
+        category=category
+    ).select_related(
+        'auction',
+        'category',
+        'subcategory'
+    ).prefetch_related(
+        'bids'
+    ).order_by(
+        '-created_at'
+    )
+
+    # =====================================================
+    # FILTER BY SUBCATEGORY
+    # =====================================================
+
+    if selected_subcategory:
+
+        try:
+
+            selected_subcategory_id = int(
+                selected_subcategory
+            )
+
+            items = items.filter(
+                subcategory_id=selected_subcategory_id
+            )
+
+        except (TypeError, ValueError):
+
+            selected_subcategory = None
+
+    return render(
+        request,
+        'auctions/category_detail.html',
+        {
+            'category': category,
+            'subcategories': subcategories,
+            'items': items,
+            'selected_subcategory': selected_subcategory,
         }
     )
 
@@ -102,7 +198,12 @@ def auction_detail(request, auction_id):
         id=auction_id
     )
 
-    items = auction.items.all()
+    items = auction.items.select_related(
+        'category',
+        'subcategory'
+    ).prefetch_related(
+        'bids'
+    ).all()
 
     return render(
         request,
@@ -151,6 +252,7 @@ def place_bid(request, item_id):
             minimum_bid = item.starting_price
 
             if highest_bid:
+
                 minimum_bid = highest_bid.amount
 
             if bid_amount <= minimum_bid:
@@ -263,13 +365,19 @@ def dashboard(request):
         bidder=request.user
     ).select_related(
         'item',
-        'item__auction'
+        'item__auction',
+        'item__category',
+        'item__subcategory'
     ).order_by(
         '-created_at'
     )
 
     won_items = Item.objects.filter(
         winner=request.user
+    ).select_related(
+        'auction',
+        'category',
+        'subcategory'
     )
 
     return render(
@@ -300,13 +408,35 @@ def admin_dashboard(request):
             'dashboard'
         )
 
-    auctions = Auction.objects.all()
+    auctions = Auction.objects.all().order_by(
+        '-created_at'
+    )
 
-    items = Item.objects.all()
+    items = Item.objects.select_related(
+        'auction',
+        'category',
+        'subcategory',
+        'winner'
+    ).all().order_by(
+        '-created_at'
+    )
 
-    bids = Bid.objects.all()
+    bids = Bid.objects.select_related(
+        'item',
+        'bidder'
+    ).all().order_by(
+        '-created_at'
+    )
 
-    announcements = Announcement.objects.all()
+    announcements = Announcement.objects.all().order_by(
+        '-created_at'
+    )
+
+    categories = Category.objects.prefetch_related(
+        'subcategories'
+    ).all().order_by(
+        'name'
+    )
 
     return render(
         request,
@@ -316,6 +446,7 @@ def admin_dashboard(request):
             'items': items,
             'bids': bids,
             'announcements': announcements,
+            'categories': categories,
         }
     )
 

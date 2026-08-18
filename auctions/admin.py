@@ -1,17 +1,17 @@
 from django.contrib import admin
 
 from .models import (
-    Category,
-    SubCategory,
     Auction,
     Item,
     Bid,
     Announcement,
+    Category,
+    SubCategory,
 )
 
 
 # =========================================================
-# CATEGORY ADMIN
+# CATEGORY
 # =========================================================
 
 @admin.register(Category)
@@ -19,6 +19,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
     list_display = (
         'name',
+        'description',
         'icon',
     )
 
@@ -33,7 +34,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 # =========================================================
-# SUBCATEGORY ADMIN
+# SUBCATEGORY
 # =========================================================
 
 @admin.register(SubCategory)
@@ -42,6 +43,7 @@ class SubCategoryAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'category',
+        'description',
     )
 
     list_filter = (
@@ -61,7 +63,7 @@ class SubCategoryAdmin(admin.ModelAdmin):
 
 
 # =========================================================
-# AUCTION ADMIN
+# AUCTION
 # =========================================================
 
 @admin.register(Auction)
@@ -73,6 +75,7 @@ class AuctionAdmin(admin.ModelAdmin):
         'status',
         'start_date',
         'end_date',
+        'created_at',
     )
 
     list_filter = (
@@ -93,7 +96,7 @@ class AuctionAdmin(admin.ModelAdmin):
 
 
 # =========================================================
-# ITEM ADMIN
+# ITEM
 # =========================================================
 
 @admin.register(Item)
@@ -101,13 +104,14 @@ class ItemAdmin(admin.ModelAdmin):
 
     list_display = (
         'name',
+        'auction',
         'category',
         'subcategory',
-        'auction',
         'starting_price',
         'condition',
         'is_sold',
         'winner',
+        'created_at',
     )
 
     list_filter = (
@@ -130,9 +134,15 @@ class ItemAdmin(admin.ModelAdmin):
         '-created_at',
     )
 
+    autocomplete_fields = (
+        'category',
+        'subcategory',
+        'winner',
+    )
+
 
 # =========================================================
-# BID ADMIN
+# BID
 # =========================================================
 
 @admin.register(Bid)
@@ -152,10 +162,7 @@ class BidAdmin(admin.ModelAdmin):
     search_fields = (
         'item__name',
         'bidder__username',
-    )
-
-    readonly_fields = (
-        'created_at',
+        'bidder__email',
     )
 
     ordering = (
@@ -164,7 +171,7 @@ class BidAdmin(admin.ModelAdmin):
 
 
 # =========================================================
-# ANNOUNCEMENT ADMIN
+# ANNOUNCEMENT
 # =========================================================
 
 @admin.register(Announcement)
@@ -184,10 +191,6 @@ class AnnouncementAdmin(admin.ModelAdmin):
     search_fields = (
         'title',
         'content',
-    )
-
-    readonly_fields = (
-        'created_at',
     )
 
     ordering = (
