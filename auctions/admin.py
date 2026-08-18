@@ -1,12 +1,68 @@
 from django.contrib import admin
 
 from .models import (
+    Category,
+    SubCategory,
     Auction,
     Item,
     Bid,
     Announcement,
 )
 
+
+# =========================================================
+# CATEGORY ADMIN
+# =========================================================
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'name',
+        'icon',
+    )
+
+    search_fields = (
+        'name',
+        'description',
+    )
+
+    ordering = (
+        'name',
+    )
+
+
+# =========================================================
+# SUBCATEGORY ADMIN
+# =========================================================
+
+@admin.register(SubCategory)
+class SubCategoryAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'name',
+        'category',
+    )
+
+    list_filter = (
+        'category',
+    )
+
+    search_fields = (
+        'name',
+        'category__name',
+        'description',
+    )
+
+    ordering = (
+        'category',
+        'name',
+    )
+
+
+# =========================================================
+# AUCTION ADMIN
+# =========================================================
 
 @admin.register(Auction)
 class AuctionAdmin(admin.ModelAdmin):
@@ -31,27 +87,53 @@ class AuctionAdmin(admin.ModelAdmin):
         'location',
     )
 
+    ordering = (
+        '-created_at',
+    )
+
+
+# =========================================================
+# ITEM ADMIN
+# =========================================================
 
 @admin.register(Item)
 class ItemAdmin(admin.ModelAdmin):
 
     list_display = (
         'name',
+        'category',
+        'subcategory',
         'auction',
         'starting_price',
         'condition',
+        'is_sold',
+        'winner',
     )
 
     list_filter = (
-        'auction',
+        'category',
+        'subcategory',
         'condition',
+        'is_sold',
+        'auction',
     )
 
     search_fields = (
         'name',
         'description',
+        'category__name',
+        'subcategory__name',
+        'auction__title',
     )
 
+    ordering = (
+        '-created_at',
+    )
+
+
+# =========================================================
+# BID ADMIN
+# =========================================================
 
 @admin.register(Bid)
 class BidAdmin(admin.ModelAdmin):
@@ -76,6 +158,14 @@ class BidAdmin(admin.ModelAdmin):
         'created_at',
     )
 
+    ordering = (
+        '-amount',
+    )
+
+
+# =========================================================
+# ANNOUNCEMENT ADMIN
+# =========================================================
 
 @admin.register(Announcement)
 class AnnouncementAdmin(admin.ModelAdmin):
@@ -98,4 +188,8 @@ class AnnouncementAdmin(admin.ModelAdmin):
 
     readonly_fields = (
         'created_at',
+    )
+
+    ordering = (
+        '-created_at',
     )
