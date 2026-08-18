@@ -1,39 +1,14 @@
-"auctions/forms.py"
-
 from django import forms
+from django.contrib.auth import authenticate
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import AuthenticationForm
 
-from .models import Bid
-
-
-# =========================================================
-# BID FORM
-# =========================================================
-
-class BidForm(forms.ModelForm):
-
-    class Meta:
-        model = Bid
-
-        fields = [
-            'amount',
-        ]
-
-        widgets = {
-            'amount': forms.NumberInput(
-                attrs={
-                    'class': 'form-control',
-                    'placeholder': 'Enter your bid amount',
-                    'min': '0',
-                    'step': '0.01',
-                }
-            ),
-        }
-
-        labels = {
-            'amount': 'Your Bid Amount (TZS)',
-        }
+from .models import (
+    Bid,
+    Item,
+    Category,
+    SubCategory,
+)
 
 
 # =========================================================
@@ -46,8 +21,8 @@ class RegisterForm(forms.ModelForm):
         label='Password',
         widget=forms.PasswordInput(
             attrs={
-                'placeholder': 'Create your password',
-                'autocomplete': 'new-password',
+                'class': 'form-control',
+                'placeholder': 'Enter password',
             }
         )
     )
@@ -56,53 +31,54 @@ class RegisterForm(forms.ModelForm):
         label='Confirm Password',
         widget=forms.PasswordInput(
             attrs={
-                'placeholder': 'Confirm your password',
-                'autocomplete': 'new-password',
+                'class': 'form-control',
+                'placeholder': 'Confirm password',
             }
         )
     )
 
     class Meta:
+
         model = User
 
-        fields = [
+        fields = (
             'first_name',
             'last_name',
+            'username',
             'email',
-        ]
-
-        labels = {
-            'first_name': 'First Name',
-            'last_name': 'Last Name',
-            'email': 'Email Address',
-        }
+        )
 
         widgets = {
+
             'first_name': forms.TextInput(
                 attrs={
-                    'placeholder': 'Enter your first name',
-                    'autocomplete': 'given-name',
+                    'class': 'form-control',
+                    'placeholder': 'First name',
                 }
             ),
 
             'last_name': forms.TextInput(
                 attrs={
-                    'placeholder': 'Enter your last name',
-                    'autocomplete': 'family-name',
+                    'class': 'form-control',
+                    'placeholder': 'Last name',
+                }
+            ),
+
+            'username': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Username',
                 }
             ),
 
             'email': forms.EmailInput(
                 attrs={
-                    'placeholder': 'Enter your email address',
-                    'autocomplete': 'email',
+                    'class': 'form-control',
+                    'placeholder': 'Email address',
                 }
             ),
         }
 
-    # =====================================================
-    # EMAIL VALIDATION
-    # =====================================================
 
     def clean_email(self):
 
@@ -110,34 +86,51 @@ class RegisterForm(forms.ModelForm):
 
         if not email:
             raise forms.ValidationError(
-                'Tafadhali weka email yako.'
+                'Email is required.'
             )
 
-        # Remove spaces and make email lowercase
         email = email.strip().lower()
 
-        # Check whether this exact email already exists
-        existing_user = User.objects.filter(
+        if User.objects.filter(
             email__iexact=email
-        ).first()
-
-        if existing_user:
+        ).exists():
 
             raise forms.ValidationError(
                 'Email hii tayari imesajiliwa. '
-                'Tafadhali tumia email nyingine.'
+                'Tumia email nyingine au ingia kwenye akaunti yako.'
             )
 
         return email
 
-    # =====================================================
-    # PASSWORD CONFIRMATION
-    # =====================================================
 
-    def clean_password2(self):
+    def clean_username(self):
 
-        password1 = self.cleaned_data.get('password1')
-        password2 = self.cleaned_data.get('password2')
+        username = self.cleaned_data.get('username')
+
+        if not username:
+            raise forms.ValidationError(
+                'Username is required.'
+            )
+
+        username = username.strip()
+
+        if User.objects.filter(
+            username__iexact=username
+        ).exists():
+
+            raise forms.ValidationError(
+                'Username hii tayari inatumika.'
+            )
+
+        return username
+
+
+    def clean(self):
+
+        cleaned_data = super().clean()
+
+        password1 = cleaned_data.get('password1')
+        password2 = cleaned_data.get('password2')
 
         if password1 and password2:
 
@@ -147,49 +140,26 @@ class RegisterForm(forms.ModelForm):
                     'Passwords hazifanani.'
                 )
 
-        return password2
+            if len(password1) < 8:
 
-    # =====================================================
-    # SAVE USER
-    # =====================================================
+                raise forms.ValidationError(
+                    'Password lazima iwe na angalau characters 8.'
+                )
+
+        return cleaned_data
+
 
     def save(self, commit=True):
 
         user = super().save(commit=False)
 
-        email = self.cleaned_data['email']
-
-        # =================================================
-        # AUTOMATIC USERNAME
-        # =================================================
-
-        base_username = email.split('@')[0]
-
-        username = base_username
-
-        counter = 1
-
-        while User.objects.filter(
-            username=username
-        ).exists():
-
-            username = f'{base_username}{counter}'
-
-            counter += 1
-
-        user.username = username
-
-        # =================================================
-        # PASSWORD
-        # =================================================
+        user.email = self.cleaned_data[
+            'email'
+        ].lower()
 
         user.set_password(
             self.cleaned_data['password1']
         )
-
-        # =================================================
-        # SAVE USER
-        # =================================================
 
         if commit:
             user.save()
@@ -198,16 +168,17 @@ class RegisterForm(forms.ModelForm):
 
 
 # =========================================================
-# LOGIN USING EMAIL
+# EMAIL LOGIN FORM
 # =========================================================
 
-class EmailLoginForm(forms.Form):
+class EmailLoginForm(AuthenticationForm):
 
-    email = forms.EmailField(
-        label='Email Address',
+    username = forms.CharField(
+        label='Email',
         widget=forms.EmailInput(
             attrs={
-                'placeholder': 'Enter your email address',
+                'class': 'form-control',
+                'placeholder': 'Enter your email',
                 'autocomplete': 'email',
             }
         )
@@ -215,69 +186,270 @@ class EmailLoginForm(forms.Form):
 
     password = forms.CharField(
         label='Password',
+        strip=False,
         widget=forms.PasswordInput(
             attrs={
+                'class': 'form-control',
                 'placeholder': 'Enter your password',
                 'autocomplete': 'current-password',
             }
         )
     )
 
-    def __init__(self, request=None, *args, **kwargs):
 
-        self.request = request
-        self.user_cache = None
+    def clean(self):
 
-        super().__init__(*args, **kwargs)
+        email = self.cleaned_data.get(
+            'username'
+        )
 
-    # =====================================================
-    # LOGIN VALIDATION
-    # =====================================================
+        password = self.cleaned_data.get(
+            'password'
+        )
+
+        if email and password:
+
+            email = email.strip().lower()
+
+            try:
+
+                user_obj = User.objects.get(
+                    email__iexact=email
+                )
+
+                username = user_obj.username
+
+            except User.DoesNotExist:
+
+                raise forms.ValidationError(
+                    'Email au password si sahihi.'
+                )
+
+            self.user_cache = authenticate(
+                self.request,
+                username=username,
+                password=password
+            )
+
+            if self.user_cache is None:
+
+                raise forms.ValidationError(
+                    'Email au password si sahihi.'
+                )
+
+            self.confirm_login_allowed(
+                self.user_cache
+            )
+
+        return self.cleaned_data
+
+
+# =========================================================
+# BID FORM
+# =========================================================
+
+class BidForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Bid
+
+        fields = (
+            'amount',
+        )
+
+        widgets = {
+
+            'amount': forms.NumberInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Enter your bid amount',
+                    'min': '0',
+                    'step': '0.01',
+                }
+            ),
+        }
+
+
+    def clean_amount(self):
+
+        amount = self.cleaned_data.get(
+            'amount'
+        )
+
+        if amount is None:
+
+            raise forms.ValidationError(
+                'Please enter a bid amount.'
+            )
+
+        if amount <= 0:
+
+            raise forms.ValidationError(
+                'Bid amount must be greater than zero.'
+            )
+
+        return amount
+
+
+# =========================================================
+# ITEM FORM
+# CATEGORY + SUBCATEGORY
+# =========================================================
+
+class ItemForm(forms.ModelForm):
+
+    class Meta:
+
+        model = Item
+
+        fields = (
+            'auction',
+            'category',
+            'subcategory',
+            'name',
+            'description',
+            'starting_price',
+            'image',
+            'condition',
+        )
+
+        widgets = {
+
+            'auction': forms.Select(
+                attrs={
+                    'class': 'form-control',
+                }
+            ),
+
+            'category': forms.Select(
+                attrs={
+                    'class': 'form-control',
+                    'id': 'id_category',
+                }
+            ),
+
+            'subcategory': forms.Select(
+                attrs={
+                    'class': 'form-control',
+                    'id': 'id_subcategory',
+                }
+            ),
+
+            'name': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Item name',
+                }
+            ),
+
+            'description': forms.Textarea(
+                attrs={
+                    'class': 'form-control',
+                    'rows': 4,
+                    'placeholder': 'Item description',
+                }
+            ),
+
+            'starting_price': forms.NumberInput(
+                attrs={
+                    'class': 'form-control',
+                    'min': '0',
+                    'step': '0.01',
+                }
+            ),
+
+            'image': forms.ClearableFileInput(
+                attrs={
+                    'class': 'form-control',
+                }
+            ),
+
+            'condition': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Example: New, Used, Good',
+                }
+            ),
+        }
+
+
+    def __init__(
+        self,
+        *args,
+        **kwargs
+    ):
+
+        super().__init__(
+            *args,
+            **kwargs
+        )
+
+        self.fields[
+            'category'
+        ].queryset = Category.objects.all()
+
+        self.fields[
+            'subcategory'
+        ].queryset = SubCategory.objects.none()
+
+        category_id = None
+
+        if self.is_bound:
+
+            category_id = self.data.get(
+                'category'
+            )
+
+        elif self.instance.pk:
+
+            category_id = self.instance.category_id
+
+        if category_id:
+
+            try:
+
+                self.fields[
+                    'subcategory'
+                ].queryset = SubCategory.objects.filter(
+                    category_id=category_id
+                ).order_by(
+                    'name'
+                )
+
+            except (
+                ValueError,
+                TypeError
+            ):
+
+                pass
+
 
     def clean(self):
 
         cleaned_data = super().clean()
 
-        email = cleaned_data.get('email')
-        password = cleaned_data.get('password')
+        category = cleaned_data.get(
+            'category'
+        )
 
-        if not email or not password:
-            return cleaned_data
+        subcategory = cleaned_data.get(
+            'subcategory'
+        )
 
-        email = email.strip().lower()
+        if subcategory and category:
 
-        try:
+            if subcategory.category_id != category.id:
 
-            user = User.objects.get(
-                email__iexact=email
-            )
+                raise forms.ValidationError(
+                    'SubCategory lazima itoke kwenye Category '
+                    'uliyochagua.'
+                )
 
-        except User.DoesNotExist:
-
-            raise forms.ValidationError(
-                'Email au password si sahihi.'
-            )
-
-        if not user.check_password(password):
+        elif subcategory and not category:
 
             raise forms.ValidationError(
-                'Email au password si sahihi.'
+                'Chagua Category kwanza.'
             )
-
-        if not user.is_active:
-
-            raise forms.ValidationError(
-                'Akaunti hii haijawezeshwa.'
-            )
-
-        self.user_cache = user
 
         return cleaned_data
-
-    # =====================================================
-    # GET USER
-    # =====================================================
-
-    def get_user(self):
-
-        return self.user_cache

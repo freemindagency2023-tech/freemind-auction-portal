@@ -18,23 +18,6 @@ urlpatterns = [
 
 
     # =====================================================
-    # AUCTION CATEGORIES
-    # =====================================================
-
-    path(
-        'categories/',
-        views.category_list,
-        name='category_list'
-    ),
-
-    path(
-        'categories/<int:category_id>/',
-        views.category_detail,
-        name='category_detail'
-    ),
-
-
-    # =====================================================
     # AUCTIONS
     # =====================================================
 

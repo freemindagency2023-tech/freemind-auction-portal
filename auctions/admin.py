@@ -11,7 +11,7 @@ from .models import (
 
 
 # =========================================================
-# CATEGORY
+# CATEGORY ADMIN
 # =========================================================
 
 @admin.register(Category)
@@ -19,8 +19,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
     list_display = (
         'name',
-        'description',
         'icon',
+        'subcategory_count',
     )
 
     search_fields = (
@@ -32,9 +32,14 @@ class CategoryAdmin(admin.ModelAdmin):
         'name',
     )
 
+    def subcategory_count(self, obj):
+        return obj.subcategories.count()
+
+    subcategory_count.short_description = 'Subcategories'
+
 
 # =========================================================
-# SUBCATEGORY
+# SUBCATEGORY ADMIN
 # =========================================================
 
 @admin.register(SubCategory)
@@ -43,7 +48,6 @@ class SubCategoryAdmin(admin.ModelAdmin):
     list_display = (
         'name',
         'category',
-        'description',
     )
 
     list_filter = (
@@ -52,18 +56,46 @@ class SubCategoryAdmin(admin.ModelAdmin):
 
     search_fields = (
         'name',
-        'category__name',
         'description',
+        'category__name',
     )
 
     ordering = (
-        'category',
+        'category__name',
         'name',
     )
 
 
 # =========================================================
-# AUCTION
+# ITEM INLINE
+# =========================================================
+
+class ItemInline(admin.TabularInline):
+
+    model = Item
+
+    extra = 1
+
+    fields = (
+        'name',
+        'category',
+        'subcategory',
+        'starting_price',
+        'condition',
+        'image',
+        'is_sold',
+        'winner',
+    )
+
+    autocomplete_fields = (
+        'category',
+        'subcategory',
+        'winner',
+    )
+
+
+# =========================================================
+# AUCTION ADMIN
 # =========================================================
 
 @admin.register(Auction)
@@ -94,9 +126,17 @@ class AuctionAdmin(admin.ModelAdmin):
         '-created_at',
     )
 
+    readonly_fields = (
+        'created_at',
+    )
+
+    inlines = (
+        ItemInline,
+    )
+
 
 # =========================================================
-# ITEM
+# ITEM ADMIN
 # =========================================================
 
 @admin.register(Item)
@@ -125,16 +165,21 @@ class ItemAdmin(admin.ModelAdmin):
     search_fields = (
         'name',
         'description',
+        'auction__title',
         'category__name',
         'subcategory__name',
-        'auction__title',
     )
 
     ordering = (
         '-created_at',
     )
 
+    readonly_fields = (
+        'created_at',
+    )
+
     autocomplete_fields = (
+        'auction',
         'category',
         'subcategory',
         'winner',
@@ -142,7 +187,7 @@ class ItemAdmin(admin.ModelAdmin):
 
 
 # =========================================================
-# BID
+# BID ADMIN
 # =========================================================
 
 @admin.register(Bid)
@@ -169,9 +214,13 @@ class BidAdmin(admin.ModelAdmin):
         '-amount',
     )
 
+    readonly_fields = (
+        'created_at',
+    )
+
 
 # =========================================================
-# ANNOUNCEMENT
+# ANNOUNCEMENT ADMIN
 # =========================================================
 
 @admin.register(Announcement)
@@ -195,4 +244,8 @@ class AnnouncementAdmin(admin.ModelAdmin):
 
     ordering = (
         '-created_at',
+    )
+
+    readonly_fields = (
+        'created_at',
     )

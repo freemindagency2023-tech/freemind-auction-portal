@@ -2,16 +2,25 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.views import LoginView
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
 
-from .forms import BidForm, RegisterForm, EmailLoginForm
+from .forms import (
+    BidForm,
+    RegisterForm,
+    EmailLoginForm,
+)
+
 from .models import (
-    Category,
-    SubCategory,
     Auction,
     Item,
     Bid,
     Announcement,
+    Category,
+    SubCategory,
 )
 
 
@@ -34,19 +43,14 @@ class CustomLoginView(LoginView):
             user
         )
 
-        # =================================================
-        # ADMIN / STAFF / SUPERUSER
-        # =================================================
-
-        if user.is_superuser or user.is_staff:
+        if (
+            user.is_superuser
+            or user.is_staff
+        ):
 
             return redirect(
                 'admin_dashboard'
             )
-
-        # =================================================
-        # NORMAL USER
-        # =================================================
 
         return redirect(
             'dashboard'
@@ -85,60 +89,67 @@ def home(request):
 
 
 # =========================================================
-# CATEGORY LIST
+# AUCTION LIST
+# CATEGORY + SUBCATEGORY FILTER
 # =========================================================
 
-def category_list(request):
+def auction_list(request):
 
-    categories = Category.objects.prefetch_related(
+    auctions = Auction.objects.all().prefetch_related(
+        'items',
+        'items__category',
+        'items__subcategory',
+    ).order_by(
+        '-created_at'
+    )
+
+    categories = Category.objects.all().prefetch_related(
         'subcategories'
     ).order_by(
         'name'
     )
 
-    return render(
-        request,
-        'auctions/category_list.html',
-        {
-            'categories': categories,
-        }
-    )
-
-
-# =========================================================
-# CATEGORY DETAIL
-# =========================================================
-
-def category_detail(request, category_id):
-
-    category = get_object_or_404(
-        Category,
-        id=category_id
-    )
-
-    subcategories = category.subcategories.all().order_by(
+    subcategories = SubCategory.objects.all().select_related(
+        'category'
+    ).order_by(
         'name'
+    )
+
+    selected_category = request.GET.get(
+        'category'
     )
 
     selected_subcategory = request.GET.get(
         'subcategory'
     )
 
-    items = Item.objects.filter(
-        category=category
-    ).select_related(
-        'auction',
-        'category',
-        'subcategory'
-    ).prefetch_related(
-        'bids'
-    ).order_by(
-        '-created_at'
-    )
+    # -----------------------------------------------------
+    # FILTER BY CATEGORY
+    # -----------------------------------------------------
 
-    # =====================================================
+    if selected_category:
+
+        try:
+
+            selected_category_id = int(
+                selected_category
+            )
+
+            auctions = auctions.filter(
+                items__category_id=selected_category_id
+            ).distinct()
+
+        except (
+            ValueError,
+            TypeError
+        ):
+
+            selected_category = None
+
+
+    # -----------------------------------------------------
     # FILTER BY SUBCATEGORY
-    # =====================================================
+    # -----------------------------------------------------
 
     if selected_subcategory:
 
@@ -148,41 +159,61 @@ def category_detail(request, category_id):
                 selected_subcategory
             )
 
-            items = items.filter(
-                subcategory_id=selected_subcategory_id
-            )
+            auctions = auctions.filter(
+                items__subcategory_id=selected_subcategory_id
+            ).distinct()
 
-        except (TypeError, ValueError):
+        except (
+            ValueError,
+            TypeError
+        ):
 
             selected_subcategory = None
 
-    return render(
-        request,
-        'auctions/category_detail.html',
-        {
-            'category': category,
-            'subcategories': subcategories,
-            'items': items,
-            'selected_subcategory': selected_subcategory,
-        }
-    )
+
+    # -----------------------------------------------------
+    # SELECTED CATEGORY OBJECT
+    # -----------------------------------------------------
+
+    selected_category_obj = None
+
+    if selected_category:
+
+        selected_category_obj = Category.objects.filter(
+            id=selected_category
+        ).first()
 
 
-# =========================================================
-# AUCTION LIST
-# =========================================================
+    # -----------------------------------------------------
+    # SUBCATEGORIES FOR SELECTED CATEGORY
+    # -----------------------------------------------------
 
-def auction_list(request):
+    filtered_subcategories = subcategories
 
-    auctions = Auction.objects.all().order_by(
-        '-created_at'
-    )
+    if selected_category_obj:
+
+        filtered_subcategories = subcategories.filter(
+            category=selected_category_obj
+        )
+
 
     return render(
         request,
         'auctions/auction_list.html',
         {
             'auctions': auctions,
+
+            'categories': categories,
+
+            'subcategories': filtered_subcategories,
+
+            'all_subcategories': subcategories,
+
+            'selected_category': selected_category,
+
+            'selected_subcategory': selected_subcategory,
+
+            'selected_category_obj': selected_category_obj,
         }
     )
 
@@ -191,7 +222,10 @@ def auction_list(request):
 # AUCTION DETAIL
 # =========================================================
 
-def auction_detail(request, auction_id):
+def auction_detail(
+    request,
+    auction_id
+):
 
     auction = get_object_or_404(
         Auction,
@@ -203,7 +237,11 @@ def auction_detail(request, auction_id):
         'subcategory'
     ).prefetch_related(
         'bids'
-    ).all()
+    )
+
+    categories = Category.objects.all().order_by(
+        'name'
+    )
 
     return render(
         request,
@@ -211,6 +249,7 @@ def auction_detail(request, auction_id):
         {
             'auction': auction,
             'items': items,
+            'categories': categories,
         }
     )
 
@@ -220,7 +259,10 @@ def auction_detail(request, auction_id):
 # =========================================================
 
 @login_required
-def place_bid(request, item_id):
+def place_bid(
+    request,
+    item_id
+):
 
     item = get_object_or_404(
         Item,
@@ -243,11 +285,15 @@ def place_bid(request, item_id):
 
     if request.method == 'POST':
 
-        form = BidForm(request.POST)
+        form = BidForm(
+            request.POST
+        )
 
         if form.is_valid():
 
-            bid_amount = form.cleaned_data['amount']
+            bid_amount = form.cleaned_data[
+                'amount'
+            ]
 
             minimum_bid = item.starting_price
 
@@ -265,7 +311,9 @@ def place_bid(request, item_id):
 
             else:
 
-                bid = form.save(commit=False)
+                bid = form.save(
+                    commit=False
+                )
 
                 bid.item = item
 
@@ -307,7 +355,10 @@ def place_bid(request, item_id):
 @user_passes_test(
     lambda u: u.is_staff or u.is_superuser
 )
-def close_bidding(request, item_id):
+def close_bidding(
+    request,
+    item_id
+):
 
     item = get_object_or_404(
         Item,
@@ -324,10 +375,15 @@ def close_bidding(request, item_id):
 
         item.save()
 
+        winner_name = (
+            item.winner.first_name
+            or item.winner.username
+        )
+
         messages.success(
             request,
             f'Mnada umefungwa! Mshindi ni '
-            f'{item.winner.first_name or item.winner.username}.'
+            f'{winner_name}.'
         )
 
     else:
@@ -353,9 +409,10 @@ def close_bidding(request, item_id):
 @login_required
 def dashboard(request):
 
-    # ADMIN ASIINGIE USER DASHBOARD
-
-    if request.user.is_superuser or request.user.is_staff:
+    if (
+        request.user.is_superuser
+        or request.user.is_staff
+    ):
 
         return redirect(
             'admin_dashboard'
@@ -367,7 +424,7 @@ def dashboard(request):
         'item',
         'item__auction',
         'item__category',
-        'item__subcategory'
+        'item__subcategory',
     ).order_by(
         '-created_at'
     )
@@ -377,7 +434,7 @@ def dashboard(request):
     ).select_related(
         'auction',
         'category',
-        'subcategory'
+        'subcategory',
     )
 
     return render(
@@ -397,8 +454,6 @@ def dashboard(request):
 @login_required
 def admin_dashboard(request):
 
-    # NORMAL USER ASIINGIE ADMIN DASHBOARD
-
     if not (
         request.user.is_staff
         or request.user.is_superuser
@@ -416,14 +471,14 @@ def admin_dashboard(request):
         'auction',
         'category',
         'subcategory',
-        'winner'
+        'winner',
     ).all().order_by(
         '-created_at'
     )
 
     bids = Bid.objects.select_related(
         'item',
-        'bidder'
+        'bidder',
     ).all().order_by(
         '-created_at'
     )
@@ -438,6 +493,13 @@ def admin_dashboard(request):
         'name'
     )
 
+    subcategories = SubCategory.objects.select_related(
+        'category'
+    ).all().order_by(
+        'category__name',
+        'name'
+    )
+
     return render(
         request,
         'auctions/admin_dashboard.html',
@@ -447,6 +509,7 @@ def admin_dashboard(request):
             'bids': bids,
             'announcements': announcements,
             'categories': categories,
+            'subcategories': subcategories,
         }
     )
 
@@ -477,7 +540,10 @@ def dashboard_redirect(request):
 # =========================================================
 
 @login_required
-def edit_bid(request, bid_id):
+def edit_bid(
+    request,
+    bid_id
+):
 
     bid = get_object_or_404(
         Bid,
@@ -509,11 +575,16 @@ def edit_bid(request, bid_id):
 
         if form.is_valid():
 
-            bid_amount = form.cleaned_data['amount']
+            bid_amount = form.cleaned_data[
+                'amount'
+            ]
 
             minimum_bid = item.starting_price
 
-            if highest_bid and highest_bid != bid:
+            if (
+                highest_bid
+                and highest_bid != bid
+            ):
 
                 minimum_bid = highest_bid.amount
 
@@ -560,7 +631,10 @@ def edit_bid(request, bid_id):
 # =========================================================
 
 @login_required
-def delete_bid(request, bid_id):
+def delete_bid(
+    request,
+    bid_id
+):
 
     bid = get_object_or_404(
         Bid,
@@ -609,7 +683,10 @@ def register(request):
 
     if request.user.is_authenticated:
 
-        if request.user.is_staff or request.user.is_superuser:
+        if (
+            request.user.is_staff
+            or request.user.is_superuser
+        ):
 
             return redirect(
                 'admin_dashboard'
