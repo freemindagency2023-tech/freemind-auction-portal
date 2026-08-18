@@ -6,6 +6,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from .forms import (
     BidForm,
@@ -275,6 +277,16 @@ def notify_users_new_auction(auction_item):
             recipient_list,
             fail_silently=True,
         )
+
+
+# =========================================================
+# SIGNAL YA KUTUMA EMAIL KILA ITEM MPYA INAPOTENGENEZWA
+# =========================================================
+
+@receiver(post_save, sender=Item)
+def send_email_on_new_item(sender, instance, created, **kwargs):
+    if created:
+        notify_users_new_auction(instance)
 
 
 # =========================================================
