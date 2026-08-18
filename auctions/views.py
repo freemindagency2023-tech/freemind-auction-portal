@@ -3,6 +3,9 @@ from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.views import LoginView
 from django.shortcuts import get_object_or_404, redirect, render
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth.models import User
 
 from .forms import (
     BidForm,
@@ -85,10 +88,6 @@ def home(request):
 
 # =========================================================
 # AUCTION CATEGORIES
-# =========================================================
-# User sees categories first.
-# Clicking a category shows its items.
-# Clicking a subcategory shows only its items.
 # =========================================================
 
 def auction_list(request):
@@ -191,7 +190,6 @@ def auction_list(request):
 
             else:
 
-                # If user opens subcategory directly
                 selected_category_obj = (
                     selected_subcategory_obj.category
                 )
@@ -250,6 +248,33 @@ def auction_list(request):
             'selected_subcategory_obj': selected_subcategory_obj,
         }
     )
+
+
+# =========================================================
+# UTILITY YA KUTUMA EMAIL KWA WATUMIAJI WOTE
+# =========================================================
+
+def notify_users_new_auction(auction_item):
+    recipient_list = list(
+        User.objects.filter(is_active=True).values_list('email', flat=True)
+    )
+    recipient_list = [email for email in recipient_list if email]
+
+    if recipient_list:
+        subject = f"Mnada Mpya Umezinduliwa: {auction_item.name}"
+        message = (
+            f"Habari!\n\n"
+            f"Bidhaa mpya ya '{auction_item.name}' imewekwa kwenye mnada kupitia Freemind Auction Portal.\n"
+            f"Bei ya kuanzia ni: TZS {auction_item.starting_price:,.2f}\n\n"
+            f"Ingia kwenye mfumo wetu ili uweke dau lako mapema!"
+        )
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            recipient_list,
+            fail_silently=True,
+        )
 
 
 # =========================================================
