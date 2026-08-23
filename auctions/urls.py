@@ -1,4 +1,5 @@
 from django.urls import path
+from django.contrib.auth import views as auth_views
 from . import views
 
 
@@ -8,7 +9,17 @@ app_name = "auctions"
 urlpatterns = [
 
     # =====================================================
-    # HOME / AUCTIONS (Tumeongeza name='home' hapa)
+    # AUTHENTICATION (Password Reset)
+    # =====================================================
+
+    path(
+        "password-reset/",
+        auth_views.PasswordResetView.as_view(template_name='registration/password_reset_form.html'),
+        name="password_reset",
+    ),
+
+    # =====================================================
+    # HOME / AUCTIONS
     # =====================================================
 
     path(
