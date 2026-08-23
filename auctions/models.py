@@ -20,19 +20,14 @@ class Category(models.Model):
     icon = models.CharField(
         max_length=100,
         blank=True,
-        help_text="Example: 🚗, 🏠, 💻, 🏭"
+        help_text="Example: 🚗, 🏠, 💻, 🏭",
     )
 
     class Meta:
-
         verbose_name_plural = "Categories"
-
-        ordering = [
-            'name'
-        ]
+        ordering = ["name"]
 
     def __str__(self):
-
         return self.name
 
 
@@ -45,7 +40,7 @@ class SubCategory(models.Model):
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
-        related_name='subcategories'
+        related_name="subcategories",
     )
 
     name = models.CharField(
@@ -57,25 +52,17 @@ class SubCategory(models.Model):
     )
 
     class Meta:
-
         verbose_name_plural = "Subcategories"
-
-        ordering = [
-            'name'
-        ]
+        ordering = ["name"]
 
         constraints = [
             models.UniqueConstraint(
-                fields=[
-                    'category',
-                    'name'
-                ],
-                name='unique_subcategory_per_category'
+                fields=["category", "name"],
+                name="unique_subcategory_per_category",
             )
         ]
 
     def __str__(self):
-
         return f"{self.category.name} - {self.name}"
 
 
@@ -86,9 +73,9 @@ class SubCategory(models.Model):
 class Auction(models.Model):
 
     STATUS_CHOICES = [
-        ('Upcoming', 'Upcoming'),
-        ('Live', 'Live'),
-        ('Closed', 'Closed'),
+        ("Upcoming", "Upcoming"),
+        ("Live", "Live"),
+        ("Closed", "Closed"),
     ]
 
     title = models.CharField(
@@ -108,7 +95,7 @@ class Auction(models.Model):
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
-        default='Upcoming'
+        default="Upcoming",
     )
 
     created_at = models.DateTimeField(
@@ -116,7 +103,6 @@ class Auction(models.Model):
     )
 
     def __str__(self):
-
         return self.title
 
 
@@ -129,7 +115,7 @@ class Item(models.Model):
     auction = models.ForeignKey(
         Auction,
         on_delete=models.CASCADE,
-        related_name='items'
+        related_name="items",
     )
 
     category = models.ForeignKey(
@@ -137,7 +123,7 @@ class Item(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='items'
+        related_name="items",
     )
 
     subcategory = models.ForeignKey(
@@ -145,7 +131,7 @@ class Item(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='items'
+        related_name="items",
     )
 
     name = models.CharField(
@@ -156,18 +142,22 @@ class Item(models.Model):
 
     starting_price = models.DecimalField(
         max_digits=15,
-        decimal_places=2
+        decimal_places=2,
     )
 
+    # =====================================================
+    # PRIMARY IMAGE
+    # =====================================================
+
     image = models.ImageField(
-        upload_to='auction_items/',
+        upload_to="auction_items/",
         blank=True,
-        null=True
+        null=True,
     )
 
     condition = models.CharField(
         max_length=100,
-        blank=True
+        blank=True,
     )
 
     winner = models.ForeignKey(
@@ -175,7 +165,7 @@ class Item(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name='won_items'
+        related_name="won_items",
     )
 
     is_sold = models.BooleanField(
@@ -187,8 +177,39 @@ class Item(models.Model):
     )
 
     def __str__(self):
-
         return self.name
+
+
+# =========================================================
+# ITEM IMAGE / GALLERY
+# =========================================================
+
+class ItemImage(models.Model):
+
+    item = models.ForeignKey(
+        Item,
+        on_delete=models.CASCADE,
+        related_name="images",
+    )
+
+    image = models.ImageField(
+        upload_to="auction_items/gallery/",
+    )
+
+    caption = models.CharField(
+        max_length=200,
+        blank=True,
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"{self.item.name} - Image {self.pk}"
 
 
 # =========================================================
@@ -200,18 +221,18 @@ class Bid(models.Model):
     item = models.ForeignKey(
         Item,
         on_delete=models.CASCADE,
-        related_name='bids'
+        related_name="bids",
     )
 
     bidder = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='bids'
+        related_name="bids",
     )
 
     amount = models.DecimalField(
         max_digits=15,
-        decimal_places=2
+        decimal_places=2,
     )
 
     created_at = models.DateTimeField(
@@ -219,13 +240,9 @@ class Bid(models.Model):
     )
 
     class Meta:
-
-        ordering = [
-            '-amount'
-        ]
+        ordering = ["-amount"]
 
     def __str__(self):
-
         return f"{self.bidder.username} - {self.amount}"
 
 
@@ -250,5 +267,4 @@ class Announcement(models.Model):
     )
 
     def __str__(self):
-
         return self.title

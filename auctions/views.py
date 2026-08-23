@@ -19,6 +19,7 @@ from .forms import (
 from .models import (
     Auction,
     Item,
+    ItemImage,
     Bid,
     Announcement,
     Category,
@@ -132,7 +133,8 @@ def auction_list(request):
         'category',
         'subcategory',
     ).prefetch_related(
-        'bids'
+        'bids',
+        'images',
     ).order_by(
         '-created_at'
     )
@@ -328,7 +330,8 @@ def auction_detail(
         'category',
         'subcategory'
     ).prefetch_related(
-        'bids'
+        'bids',
+        'images',
     )
 
     categories = Category.objects.all().order_by(
@@ -365,12 +368,58 @@ def add_item(request):
 
         if form.is_valid():
 
+            # ---------------------------------------------
+            # SAVE MAIN ITEM
+            # ---------------------------------------------
+
             item = form.save()
+
+            # ---------------------------------------------
+            # SAVE MULTIPLE GALLERY IMAGES
+            # ---------------------------------------------
+
+            uploaded_images = form.cleaned_data.get(
+                'images',
+                []
+            )
+
+            for uploaded_image in uploaded_images:
+
+                ItemImage.objects.create(
+                    item=item,
+                    image=uploaded_image
+                )
+
+            # ---------------------------------------------
+            # SUCCESS MESSAGE
+            # ---------------------------------------------
+
+            image_count = len(
+                uploaded_images
+            )
+
+            if image_count == 0:
+
+                image_message = (
+                    'bila gallery images'
+                )
+
+            elif image_count == 1:
+
+                image_message = (
+                    'na gallery image 1'
+                )
+
+            else:
+
+                image_message = (
+                    f'na gallery images {image_count}'
+                )
 
             messages.success(
                 request,
-                f'Item "{item.name}" imeongezwa '
-                f'kwa mafanikio!'
+                f'Item "{item.name}" imeongezwa kwa mafanikio '
+                f'{image_message}.'
             )
 
             return redirect(
@@ -407,7 +456,10 @@ def place_bid(
 ):
 
     item = get_object_or_404(
-        Item,
+        Item.objects.prefetch_related(
+            'images',
+            'bids'
+        ),
         id=item_id
     )
 
@@ -583,6 +635,8 @@ def dashboard(request):
         'auction',
         'category',
         'subcategory',
+    ).prefetch_related(
+        'images'
     )
 
     return render(
@@ -641,6 +695,8 @@ def admin_dashboard(request):
         'category',
         'subcategory',
         'winner',
+    ).prefetch_related(
+        'images'
     ).all().order_by(
         '-created_at'
     )

@@ -12,6 +12,82 @@ from .models import (
 
 
 # =========================================================
+# MULTIPLE IMAGE FIELD
+# =========================================================
+
+class MultipleImageInput(forms.ClearableFileInput):
+
+    allow_multiple_selected = True
+
+
+class MultipleImageField(forms.FileField):
+
+    widget = MultipleImageInput
+
+    def clean(self, data, initial=None):
+
+        single_file_clean = super().clean
+
+        if not data:
+            return []
+
+        if isinstance(data, (list, tuple)):
+
+            result = []
+
+            for file in data:
+
+                cleaned_file = single_file_clean(
+                    file,
+                    initial
+                )
+
+                # Validate that the uploaded file is an image
+                try:
+
+                    image_field = forms.ImageField()
+
+                    cleaned_file = image_field.clean(
+                        cleaned_file,
+                        initial
+                    )
+
+                except forms.ValidationError:
+
+                    raise forms.ValidationError(
+                        f'File "{file.name}" si picha halali.'
+                    )
+
+                result.append(
+                    cleaned_file
+                )
+
+            return result
+
+        cleaned_file = single_file_clean(
+            data,
+            initial
+        )
+
+        try:
+
+            image_field = forms.ImageField()
+
+            cleaned_file = image_field.clean(
+                cleaned_file,
+                initial
+            )
+
+        except forms.ValidationError:
+
+            raise forms.ValidationError(
+                'File iliyowekwa si picha halali.'
+            )
+
+        return [cleaned_file]
+
+
+# =========================================================
 # REGISTER FORM
 # =========================================================
 
@@ -40,6 +116,7 @@ class RegisterForm(forms.ModelForm):
     )
 
     class Meta:
+
         model = User
 
         fields = (
@@ -50,6 +127,7 @@ class RegisterForm(forms.ModelForm):
         )
 
         widgets = {
+
             'first_name': forms.TextInput(
                 attrs={
                     'class': 'form-control',
@@ -82,9 +160,12 @@ class RegisterForm(forms.ModelForm):
 
     def clean_email(self):
 
-        email = self.cleaned_data.get('email')
+        email = self.cleaned_data.get(
+            'email'
+        )
 
         if not email:
+
             raise forms.ValidationError(
                 'Email is required.'
             )
@@ -104,9 +185,12 @@ class RegisterForm(forms.ModelForm):
 
     def clean_username(self):
 
-        username = self.cleaned_data.get('username')
+        username = self.cleaned_data.get(
+            'username'
+        )
 
         if not username:
+
             raise forms.ValidationError(
                 'Username is required.'
             )
@@ -127,8 +211,13 @@ class RegisterForm(forms.ModelForm):
 
         cleaned_data = super().clean()
 
-        password1 = cleaned_data.get('password1')
-        password2 = cleaned_data.get('password2')
+        password1 = cleaned_data.get(
+            'password1'
+        )
+
+        password2 = cleaned_data.get(
+            'password2'
+        )
 
         if password1 and password2:
 
@@ -142,7 +231,9 @@ class RegisterForm(forms.ModelForm):
 
     def save(self, commit=True):
 
-        user = super().save(commit=False)
+        user = super().save(
+            commit=False
+        )
 
         user.email = self.cleaned_data[
             'email'
@@ -153,6 +244,7 @@ class RegisterForm(forms.ModelForm):
         )
 
         if commit:
+
             user.save()
 
         return user
@@ -189,8 +281,13 @@ class EmailLoginForm(AuthenticationForm):
 
     def clean(self):
 
-        email = self.cleaned_data.get('username')
-        password = self.cleaned_data.get('password')
+        email = self.cleaned_data.get(
+            'username'
+        )
+
+        password = self.cleaned_data.get(
+            'password'
+        )
 
         if email and password:
 
@@ -244,6 +341,7 @@ class BidForm(forms.ModelForm):
         )
 
         widgets = {
+
             'amount': forms.NumberInput(
                 attrs={
                     'class': 'form-control',
@@ -256,7 +354,9 @@ class BidForm(forms.ModelForm):
 
     def clean_amount(self):
 
-        amount = self.cleaned_data.get('amount')
+        amount = self.cleaned_data.get(
+            'amount'
+        )
 
         if amount is None:
 
@@ -278,6 +378,25 @@ class BidForm(forms.ModelForm):
 # =========================================================
 
 class ItemForm(forms.ModelForm):
+
+    # =====================================================
+    # MULTIPLE IMAGES
+    # =====================================================
+
+    images = MultipleImageField(
+        required=False,
+        label='Additional Images',
+        widget=MultipleImageInput(
+            attrs={
+                'class': 'form-control',
+                'accept': 'image/*',
+                'multiple': True,
+            }
+        ),
+        help_text=(
+            'Unaweza kuchagua picha nyingi kwa wakati mmoja.'
+        ),
+    )
 
     class Meta:
 
@@ -355,7 +474,11 @@ class ItemForm(forms.ModelForm):
             ),
         }
 
-    def __init__(self, *args, **kwargs):
+    def __init__(
+        self,
+        *args,
+        **kwargs
+    ):
 
         super().__init__(
             *args,

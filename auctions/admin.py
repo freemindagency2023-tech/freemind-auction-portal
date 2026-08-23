@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import (
     Auction,
     Item,
+    ItemImage,
     Bid,
     Announcement,
     Category,
@@ -18,24 +19,24 @@ from .models import (
 class CategoryAdmin(admin.ModelAdmin):
 
     list_display = (
-        'name',
-        'icon',
-        'subcategory_count',
+        "name",
+        "icon",
+        "subcategory_count",
     )
 
     search_fields = (
-        'name',
-        'description',
+        "name",
+        "description",
     )
 
     ordering = (
-        'name',
+        "name",
     )
 
     def subcategory_count(self, obj):
         return obj.subcategories.count()
 
-    subcategory_count.short_description = 'Subcategories'
+    subcategory_count.short_description = "Subcategories"
 
 
 # =========================================================
@@ -46,23 +47,43 @@ class CategoryAdmin(admin.ModelAdmin):
 class SubCategoryAdmin(admin.ModelAdmin):
 
     list_display = (
-        'name',
-        'category',
+        "name",
+        "category",
     )
 
     list_filter = (
-        'category',
+        "category",
     )
 
     search_fields = (
-        'name',
-        'description',
-        'category__name',
+        "name",
+        "description",
+        "category__name",
     )
 
     ordering = (
-        'category__name',
-        'name',
+        "category__name",
+        "name",
+    )
+
+
+# =========================================================
+# ITEM IMAGE INLINE
+# =========================================================
+
+class ItemImageInline(admin.TabularInline):
+
+    model = ItemImage
+
+    extra = 3
+
+    fields = (
+        "image",
+        "caption",
+    )
+
+    ordering = (
+        "created_at",
     )
 
 
@@ -70,28 +91,31 @@ class SubCategoryAdmin(admin.ModelAdmin):
 # ITEM INLINE
 # =========================================================
 
-class ItemInline(admin.TabularInline):
+class ItemInline(admin.StackedInline):
 
     model = Item
 
     extra = 1
 
     fields = (
-        'name',
-        'category',
-        'subcategory',
-        'starting_price',
-        'condition',
-        'image',
-        'is_sold',
-        'winner',
+        "name",
+        "category",
+        "subcategory",
+        "description",
+        "starting_price",
+        "condition",
+        "image",
+        "is_sold",
+        "winner",
     )
 
     autocomplete_fields = (
-        'category',
-        'subcategory',
-        'winner',
+        "category",
+        "subcategory",
+        "winner",
     )
+
+    show_change_link = True
 
 
 # =========================================================
@@ -102,36 +126,71 @@ class ItemInline(admin.TabularInline):
 class AuctionAdmin(admin.ModelAdmin):
 
     list_display = (
-        'title',
-        'location',
-        'status',
-        'start_date',
-        'end_date',
-        'created_at',
+        "title",
+        "location",
+        "status",
+        "start_date",
+        "end_date",
+        "created_at",
     )
 
     list_filter = (
-        'status',
-        'start_date',
-        'end_date',
+        "status",
+        "start_date",
+        "end_date",
     )
 
     search_fields = (
-        'title',
-        'description',
-        'location',
+        "title",
+        "description",
+        "location",
     )
 
     ordering = (
-        '-created_at',
+        "-created_at",
     )
 
     readonly_fields = (
-        'created_at',
+        "created_at",
     )
 
     inlines = (
         ItemInline,
+    )
+
+
+# =========================================================
+# ITEM IMAGE ADMIN
+# =========================================================
+
+@admin.register(ItemImage)
+class ItemImageAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "item",
+        "caption",
+        "created_at",
+    )
+
+    list_filter = (
+        "created_at",
+    )
+
+    search_fields = (
+        "item__name",
+        "caption",
+    )
+
+    ordering = (
+        "-created_at",
+    )
+
+    readonly_fields = (
+        "created_at",
+    )
+
+    autocomplete_fields = (
+        "item",
     )
 
 
@@ -143,46 +202,50 @@ class AuctionAdmin(admin.ModelAdmin):
 class ItemAdmin(admin.ModelAdmin):
 
     list_display = (
-        'name',
-        'auction',
-        'category',
-        'subcategory',
-        'starting_price',
-        'condition',
-        'is_sold',
-        'winner',
-        'created_at',
+        "name",
+        "auction",
+        "category",
+        "subcategory",
+        "starting_price",
+        "condition",
+        "is_sold",
+        "winner",
+        "created_at",
     )
 
     list_filter = (
-        'category',
-        'subcategory',
-        'condition',
-        'is_sold',
-        'auction',
+        "category",
+        "subcategory",
+        "condition",
+        "is_sold",
+        "auction",
     )
 
     search_fields = (
-        'name',
-        'description',
-        'auction__title',
-        'category__name',
-        'subcategory__name',
+        "name",
+        "description",
+        "auction__title",
+        "category__name",
+        "subcategory__name",
     )
 
     ordering = (
-        '-created_at',
+        "-created_at",
     )
 
     readonly_fields = (
-        'created_at',
+        "created_at",
     )
 
     autocomplete_fields = (
-        'auction',
-        'category',
-        'subcategory',
-        'winner',
+        "auction",
+        "category",
+        "subcategory",
+        "winner",
+    )
+
+    inlines = (
+        ItemImageInline,
     )
 
 
@@ -194,28 +257,28 @@ class ItemAdmin(admin.ModelAdmin):
 class BidAdmin(admin.ModelAdmin):
 
     list_display = (
-        'item',
-        'bidder',
-        'amount',
-        'created_at',
+        "item",
+        "bidder",
+        "amount",
+        "created_at",
     )
 
     list_filter = (
-        'created_at',
+        "created_at",
     )
 
     search_fields = (
-        'item__name',
-        'bidder__username',
-        'bidder__email',
+        "item__name",
+        "bidder__username",
+        "bidder__email",
     )
 
     ordering = (
-        '-amount',
+        "-amount",
     )
 
     readonly_fields = (
-        'created_at',
+        "created_at",
     )
 
 
@@ -227,25 +290,25 @@ class BidAdmin(admin.ModelAdmin):
 class AnnouncementAdmin(admin.ModelAdmin):
 
     list_display = (
-        'title',
-        'published',
-        'created_at',
+        "title",
+        "published",
+        "created_at",
     )
 
     list_filter = (
-        'published',
-        'created_at',
+        "published",
+        "created_at",
     )
 
     search_fields = (
-        'title',
-        'content',
+        "title",
+        "content",
     )
 
     ordering = (
-        '-created_at',
+        "-created_at",
     )
 
     readonly_fields = (
-        'created_at',
+        "created_at",
     )
