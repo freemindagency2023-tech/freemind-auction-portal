@@ -37,8 +37,7 @@ Auction Categories | Freemind Auction
 
     .category-grid {
         display: grid;
-        grid-template-columns:
-            repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
         gap: 20px;
         margin-bottom: 35px;
     }
@@ -99,8 +98,7 @@ Auction Categories | Freemind Auction
 
     .subcategory-grid {
         display: grid;
-        grid-template-columns:
-            repeat(auto-fit, minmax(220px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 15px;
         margin-bottom: 30px;
     }
@@ -148,8 +146,7 @@ Auction Categories | Freemind Auction
 
     .items-grid {
         display: grid;
-        grid-template-columns:
-            repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
         gap: 22px;
     }
 
@@ -166,10 +163,6 @@ Auction Categories | Freemind Auction
         transform: translateY(-4px);
         box-shadow: 0 12px 25px rgba(0,0,0,0.08);
     }
-
-    /* =====================================================
-       PRIMARY IMAGE ONLY
-    ===================================================== */
 
     .item-image-wrapper {
         position: relative;
@@ -349,9 +342,7 @@ Auction Categories | Freemind Auction
 
 <div class="auction-page">
 
-    <!-- =================================================
-         HEADER
-    ================================================== -->
+    <!-- HEADER -->
 
     <div class="auction-header">
 
@@ -396,9 +387,7 @@ Auction Categories | Freemind Auction
     </div>
 
 
-    <!-- =================================================
-         CATEGORY LIST
-    ================================================== -->
+    <!-- CATEGORY LIST -->
 
     {% if not selected_category_obj %}
 
@@ -468,9 +457,7 @@ Auction Categories | Freemind Auction
     {% endif %}
 
 
-    <!-- =================================================
-         SELECTED CATEGORY
-    ================================================== -->
+    <!-- SELECTED CATEGORY -->
 
     {% if selected_category_obj %}
 
@@ -509,10 +496,7 @@ Auction Categories | Freemind Auction
 
                         <a
                             href="{% url 'auction_list' %}?category={{ selected_category_obj.id }}&subcategory={{ subcat.id }}"
-                            class="subcategory-card
-                            {% if selected_subcategory_obj and selected_subcategory_obj.id == subcat.id %}
-                                active
-                            {% endif %}"
+                            class="subcategory-card {% if selected_subcategory_obj and selected_subcategory_obj.id == subcat.id %}active{% endif %}"
                         >
 
                             <h3>
@@ -542,13 +526,11 @@ Auction Categories | Freemind Auction
 
                 {% if selected_subcategory_obj %}
 
-                    Items in
-                    {{ selected_subcategory_obj.name }}
+                    Items in {{ selected_subcategory_obj.name }}
 
                 {% else %}
 
-                    All Items in
-                    {{ selected_category_obj.name }}
+                    All Items in {{ selected_category_obj.name }}
 
                 {% endif %}
 
@@ -565,9 +547,7 @@ Auction Categories | Freemind Auction
 
                         <div class="item-card">
 
-                            <!-- =================================
-                                 PRIMARY IMAGE ONLY
-                            ================================== -->
+                            <!-- PRIMARY IMAGE -->
 
                             {% if item.image %}
 
@@ -579,77 +559,63 @@ Auction Categories | Freemind Auction
                                         class="item-image"
                                     >
 
-                                    {% with
-                                        gallery_count=item.images.all|length
-                                    %}
+                                    {% if item.images.all %}
 
-                                        {% if gallery_count %}
+                                        <span class="image-count">
 
-                                            <span class="image-count">
+                                            <i class="fa-solid fa-images"></i>
 
-                                                <i class="fa-solid fa-images"></i>
+                                            {{ item.images.count|add:"1" }}
 
-                                                {{ gallery_count|add:"1" }}
+                                            picha
 
-                                                picha
+                                        </span>
 
-                                            </span>
-
-                                        {% endif %}
-
-                                    {% endwith %}
+                                    {% endif %}
 
                                 </div>
 
                             {% else %}
 
-                                {% with
-                                    gallery_images=item.images.all
-                                %}
+                                {% if item.images.all %}
 
-                                    {% if gallery_images %}
+                                    <div class="item-image-wrapper">
 
-                                        <div class="item-image-wrapper">
+                                        <img
+                                            src="{{ item.images.all.0.image.url }}"
+                                            alt="{{ item.name }}"
+                                            class="item-image"
+                                        >
 
-                                            <img
-                                                src="{{ gallery_images.0.image.url }}"
-                                                alt="{{ item.name }}"
-                                                class="item-image"
-                                            >
+                                        <span class="image-count">
 
-                                            <span class="image-count">
+                                            <i class="fa-solid fa-images"></i>
 
-                                                <i class="fa-solid fa-images"></i>
+                                            {{ item.images.count }}
+                                            picha
 
-                                                {{ gallery_images|length }}
-                                                picha
+                                        </span>
 
-                                            </span>
+                                    </div>
 
-                                        </div>
+                                {% else %}
 
-                                    {% else %}
+                                    <div class="no-image">
 
-                                        <div class="no-image">
+                                        <i class="fa-solid fa-image"></i>
 
-                                            <i class="fa-solid fa-image"></i>
+                                        <span>
+                                            No Image
+                                        </span>
 
-                                            <span>
-                                                No Image
-                                            </span>
+                                    </div>
 
-                                        </div>
-
-                                    {% endif %}
-
-                                {% endwith %}
+                                {% endif %}
 
                             {% endif %}
 
 
-                            <!-- =================================
-                                 ITEM INFORMATION
-                            ================================== -->
+                            <!-- ITEM INFORMATION -->
 
                             <div class="item-content">
 
@@ -661,9 +627,7 @@ Auction Categories | Freemind Auction
                                 {% if item.condition %}
 
                                     <div class="condition">
-
                                         {{ item.condition }}
-
                                     </div>
 
                                 {% endif %}
@@ -715,9 +679,7 @@ Auction Categories | Freemind Auction
                                 </div>
 
 
-                                <!-- =================================
-                                     CORRECT URL
-                                ================================== -->
+                                <!-- VIEW AUCTION -->
 
                                 <a
                                     href="{% url 'auction_detail' item.auction.id %}"
