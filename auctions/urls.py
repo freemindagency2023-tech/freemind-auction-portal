@@ -8,19 +8,19 @@ app_name = "auctions"
 urlpatterns = [
 
     # =====================================================
-    # HOME / AUCTIONS
+    # HOME / AUCTIONS (Tumeongeza name='home' hapa)
     # =====================================================
 
     path(
         "",
         views.auction_list,
-        name="auction_list",
+        name="home",
     ),
 
     path(
         "auctions/",
         views.auction_list,
-        name="auction_list_page",
+        name="auction_list",
     ),
 
     path(

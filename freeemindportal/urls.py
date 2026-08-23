@@ -21,7 +21,7 @@ urlpatterns = [
 
 
     # =====================================================
-    # AUCTIONS APP
+    # AUCTIONS APP (Tumeongeza name='home' kwenye root)
     # =====================================================
 
     path(
