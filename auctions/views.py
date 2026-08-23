@@ -13,6 +13,7 @@ from .forms import (
     BidForm,
     RegisterForm,
     EmailLoginForm,
+    ItemForm,
 )
 
 from .models import (
@@ -23,6 +24,21 @@ from .models import (
     Category,
     SubCategory,
 )
+
+
+# =========================================================
+# ADMIN CHECK
+# =========================================================
+
+def is_admin_user(user):
+
+    return (
+        user.is_authenticated
+        and (
+            user.is_staff
+            or user.is_superuser
+        )
+    )
 
 
 # =========================================================
@@ -89,7 +105,7 @@ def home(request):
 
 
 # =========================================================
-# AUCTION CATEGORIES
+# AUCTION LIST
 # =========================================================
 
 def auction_list(request):
@@ -109,12 +125,7 @@ def auction_list(request):
     )
 
     selected_category_obj = None
-
     selected_subcategory_obj = None
-
-    # -----------------------------------------------------
-    # ITEMS
-    # -----------------------------------------------------
 
     items = Item.objects.select_related(
         'auction',
@@ -125,10 +136,6 @@ def auction_list(request):
     ).order_by(
         '-created_at'
     )
-
-    # -----------------------------------------------------
-    # CATEGORY FILTER
-    # -----------------------------------------------------
 
     if selected_category:
 
@@ -154,10 +161,6 @@ def auction_list(request):
 
             selected_category = None
 
-    # -----------------------------------------------------
-    # SUBCATEGORY FILTER
-    # -----------------------------------------------------
-
     if selected_subcategory:
 
         try:
@@ -170,10 +173,6 @@ def auction_list(request):
                 SubCategory,
                 id=subcategory_id
             )
-
-            # ---------------------------------------------
-            # SECURITY / CORRECT CATEGORY RELATION
-            # ---------------------------------------------
 
             if selected_category_obj:
 
@@ -211,10 +210,6 @@ def auction_list(request):
 
             selected_subcategory = None
 
-    # -----------------------------------------------------
-    # SUBCATEGORIES
-    # -----------------------------------------------------
-
     if selected_category_obj:
 
         subcategories = SubCategory.objects.filter(
@@ -227,49 +222,58 @@ def auction_list(request):
 
         subcategories = SubCategory.objects.none()
 
-    # -----------------------------------------------------
-    # RENDER
-    # -----------------------------------------------------
-
     return render(
         request,
         'auctions/auction_list.html',
         {
             'categories': categories,
-
             'subcategories': subcategories,
-
             'items': items,
-
             'selected_category': selected_category,
-
             'selected_subcategory': selected_subcategory,
-
             'selected_category_obj': selected_category_obj,
-
             'selected_subcategory_obj': selected_subcategory_obj,
         }
     )
 
 
 # =========================================================
-# UTILITY YA KUTUMA EMAIL KWA WATUMIAJI WOTE
+# EMAIL NOTIFICATION
 # =========================================================
 
 def notify_users_new_auction(auction_item):
-    recipient_list = list(
-        User.objects.filter(is_active=True).values_list('email', flat=True)
-    )
-    recipient_list = [email for email in recipient_list if email]
 
-    if recipient_list:
-        subject = f"Mnada Mpya Umezinduliwa: {auction_item.name}"
-        message = (
-            f"Habari!\n\n"
-            f"Bidhaa mpya ya '{auction_item.name}' imewekwa kwenye mnada kupitia Freemind Auction Portal.\n"
-            f"Bei ya kuanzia ni: TZS {auction_item.starting_price:,.2f}\n\n"
-            f"Ingia kwenye mfumo wetu ili uweke dau lako mapema!"
+    recipient_list = list(
+        User.objects.filter(
+            is_active=True
+        ).exclude(
+            email=''
+        ).values_list(
+            'email',
+            flat=True
         )
+    )
+
+    if not recipient_list:
+        return
+
+    subject = (
+        f"Mnada Mpya Umezinduliwa: "
+        f"{auction_item.name}"
+    )
+
+    message = (
+        f"Habari!\n\n"
+        f"Bidhaa mpya ya '{auction_item.name}' "
+        f"imewekwa kwenye mnada kupitia "
+        f"Freemind Auction Portal.\n\n"
+        f"Bei ya kuanzia ni: "
+        f"TZS {auction_item.starting_price:,.2f}\n\n"
+        f"Ingia kwenye mfumo wetu ili uweke dau lako."
+    )
+
+    try:
+
         send_mail(
             subject,
             message,
@@ -278,15 +282,32 @@ def notify_users_new_auction(auction_item):
             fail_silently=True,
         )
 
+    except Exception:
+
+        pass
+
 
 # =========================================================
-# SIGNAL YA KUTUMA EMAIL KILA ITEM MPYA INAPOTENGENEZWA
+# NEW ITEM SIGNAL
 # =========================================================
 
-@receiver(post_save, sender=Item)
-def send_email_on_new_item(sender, instance, created, **kwargs):
+@receiver(
+    post_save,
+    sender=Item,
+    dispatch_uid='auctions_send_email_new_item'
+)
+def send_email_on_new_item(
+    sender,
+    instance,
+    created,
+    **kwargs
+):
+
     if created:
-        notify_users_new_auction(instance)
+
+        notify_users_new_auction(
+            instance
+        )
 
 
 # =========================================================
@@ -321,6 +342,56 @@ def auction_detail(
             'auction': auction,
             'items': items,
             'categories': categories,
+        }
+    )
+
+
+# =========================================================
+# ADD ITEM
+# =========================================================
+
+@login_required
+@user_passes_test(
+    is_admin_user
+)
+def add_item(request):
+
+    if request.method == 'POST':
+
+        form = ItemForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+
+            item = form.save()
+
+            messages.success(
+                request,
+                f'Item "{item.name}" imeongezwa '
+                f'kwa mafanikio!'
+            )
+
+            return redirect(
+                'admin_dashboard'
+            )
+
+        messages.error(
+            request,
+            'Kuna tatizo kwenye taarifa ulizoingiza. '
+            'Angalia form na ujaribu tena.'
+        )
+
+    else:
+
+        form = ItemForm()
+
+    return render(
+        request,
+        'auctions/add_item.html',
+        {
+            'form': form,
         }
     )
 
@@ -387,7 +458,6 @@ def place_bid(
                 )
 
                 bid.item = item
-
                 bid.bidder = request.user
 
                 bid.save()
@@ -423,7 +493,7 @@ def place_bid(
 
 @login_required
 @user_passes_test(
-    lambda u: u.is_staff or u.is_superuser
+    is_admin_user
 )
 def close_bidding(
     request,
@@ -440,10 +510,14 @@ def close_bidding(
     if highest_bid:
 
         item.winner = highest_bid.bidder
-
         item.is_sold = True
 
-        item.save()
+        item.save(
+            update_fields=[
+                'winner',
+                'is_sold',
+            ]
+        )
 
         winner_name = (
             item.winner.first_name
@@ -460,7 +534,11 @@ def close_bidding(
 
         item.is_sold = True
 
-        item.save()
+        item.save(
+            update_fields=[
+                'is_sold',
+            ]
+        )
 
         messages.warning(
             request,

@@ -23,6 +23,7 @@ class RegisterForm(forms.ModelForm):
             attrs={
                 'class': 'form-control',
                 'placeholder': 'Enter password',
+                'autocomplete': 'new-password',
             }
         )
     )
@@ -33,12 +34,12 @@ class RegisterForm(forms.ModelForm):
             attrs={
                 'class': 'form-control',
                 'placeholder': 'Confirm password',
+                'autocomplete': 'new-password',
             }
         )
     )
 
     class Meta:
-
         model = User
 
         fields = (
@@ -49,7 +50,6 @@ class RegisterForm(forms.ModelForm):
         )
 
         widgets = {
-
             'first_name': forms.TextInput(
                 attrs={
                     'class': 'form-control',
@@ -75,10 +75,10 @@ class RegisterForm(forms.ModelForm):
                 attrs={
                     'class': 'form-control',
                     'placeholder': 'Email address',
+                    'autocomplete': 'email',
                 }
             ),
         }
-
 
     def clean_email(self):
 
@@ -102,7 +102,6 @@ class RegisterForm(forms.ModelForm):
 
         return email
 
-
     def clean_username(self):
 
         username = self.cleaned_data.get('username')
@@ -124,7 +123,6 @@ class RegisterForm(forms.ModelForm):
 
         return username
 
-
     def clean(self):
 
         cleaned_data = super().clean()
@@ -140,14 +138,7 @@ class RegisterForm(forms.ModelForm):
                     'Passwords hazifanani.'
                 )
 
-            if len(password1) < 8:
-
-                raise forms.ValidationError(
-                    'Password lazima iwe na angalau characters 8.'
-                )
-
         return cleaned_data
-
 
     def save(self, commit=True):
 
@@ -155,7 +146,7 @@ class RegisterForm(forms.ModelForm):
 
         user.email = self.cleaned_data[
             'email'
-        ].lower()
+        ].strip().lower()
 
         user.set_password(
             self.cleaned_data['password1']
@@ -196,16 +187,10 @@ class EmailLoginForm(AuthenticationForm):
         )
     )
 
-
     def clean(self):
 
-        email = self.cleaned_data.get(
-            'username'
-        )
-
-        password = self.cleaned_data.get(
-            'password'
-        )
+        email = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
 
         if email and password:
 
@@ -228,7 +213,7 @@ class EmailLoginForm(AuthenticationForm):
             self.user_cache = authenticate(
                 self.request,
                 username=username,
-                password=password
+                password=password,
             )
 
             if self.user_cache is None:
@@ -259,7 +244,6 @@ class BidForm(forms.ModelForm):
         )
 
         widgets = {
-
             'amount': forms.NumberInput(
                 attrs={
                     'class': 'form-control',
@@ -270,12 +254,9 @@ class BidForm(forms.ModelForm):
             ),
         }
 
-
     def clean_amount(self):
 
-        amount = self.cleaned_data.get(
-            'amount'
-        )
+        amount = self.cleaned_data.get('amount')
 
         if amount is None:
 
@@ -294,7 +275,6 @@ class BidForm(forms.ModelForm):
 
 # =========================================================
 # ITEM FORM
-# CATEGORY + SUBCATEGORY
 # =========================================================
 
 class ItemForm(forms.ModelForm):
@@ -356,12 +336,14 @@ class ItemForm(forms.ModelForm):
                     'class': 'form-control',
                     'min': '0',
                     'step': '0.01',
+                    'placeholder': 'Starting price',
                 }
             ),
 
             'image': forms.ClearableFileInput(
                 attrs={
                     'class': 'form-control',
+                    'accept': 'image/*',
                 }
             ),
 
@@ -373,12 +355,7 @@ class ItemForm(forms.ModelForm):
             ),
         }
 
-
-    def __init__(
-        self,
-        *args,
-        **kwargs
-    ):
+    def __init__(self, *args, **kwargs):
 
         super().__init__(
             *args,
@@ -387,7 +364,9 @@ class ItemForm(forms.ModelForm):
 
         self.fields[
             'category'
-        ].queryset = Category.objects.all()
+        ].queryset = Category.objects.all().order_by(
+            'name'
+        )
 
         self.fields[
             'subcategory'
@@ -424,6 +403,25 @@ class ItemForm(forms.ModelForm):
 
                 pass
 
+    def clean_starting_price(self):
+
+        price = self.cleaned_data.get(
+            'starting_price'
+        )
+
+        if price is None:
+
+            raise forms.ValidationError(
+                'Starting price is required.'
+            )
+
+        if price <= 0:
+
+            raise forms.ValidationError(
+                'Starting price must be greater than zero.'
+            )
+
+        return price
 
     def clean(self):
 

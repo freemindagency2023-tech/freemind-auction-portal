@@ -3,17 +3,20 @@ from django.contrib.auth.models import User
 
 
 # =========================================================
-# AUCTION CATEGORY
+# CATEGORY
 # =========================================================
 
 class Category(models.Model):
+
     name = models.CharField(
         max_length=100,
         unique=True
     )
+
     description = models.TextField(
         blank=True
     )
+
     icon = models.CharField(
         max_length=100,
         blank=True,
@@ -21,41 +24,58 @@ class Category(models.Model):
     )
 
     class Meta:
+
         verbose_name_plural = "Categories"
-        ordering = ['name']
+
+        ordering = [
+            'name'
+        ]
 
     def __str__(self):
+
         return self.name
 
 
 # =========================================================
-# AUCTION SUBCATEGORY
+# SUBCATEGORY
 # =========================================================
 
 class SubCategory(models.Model):
+
     category = models.ForeignKey(
         Category,
         on_delete=models.CASCADE,
         related_name='subcategories'
     )
+
     name = models.CharField(
         max_length=100
     )
+
     description = models.TextField(
         blank=True
     )
 
     class Meta:
+
         verbose_name_plural = "Subcategories"
-        ordering = ['name']
+
+        ordering = [
+            'name'
+        ]
+
         constraints = [
             models.UniqueConstraint(
-                fields=['category', 'name'],
+                fields=[
+                    'category',
+                    'name'
+                ],
                 name='unique_subcategory_per_category'
             )
         ]
 
     def __str__(self):
+
         return f"{self.category.name} - {self.name}"
 
 
@@ -96,11 +116,12 @@ class Auction(models.Model):
     )
 
     def __str__(self):
+
         return self.title
 
 
 # =========================================================
-# ITEM / AUCTION PRODUCT
+# ITEM
 # =========================================================
 
 class Item(models.Model):
@@ -110,10 +131,6 @@ class Item(models.Model):
         on_delete=models.CASCADE,
         related_name='items'
     )
-
-    # -----------------------------------------------------
-    # CATEGORY
-    # -----------------------------------------------------
 
     category = models.ForeignKey(
         Category,
@@ -130,10 +147,6 @@ class Item(models.Model):
         blank=True,
         related_name='items'
     )
-
-    # -----------------------------------------------------
-    # ITEM INFORMATION
-    # -----------------------------------------------------
 
     name = models.CharField(
         max_length=200
@@ -157,10 +170,6 @@ class Item(models.Model):
         blank=True
     )
 
-    # -----------------------------------------------------
-    # WINNER / SOLD STATUS
-    # -----------------------------------------------------
-
     winner = models.ForeignKey(
         User,
         on_delete=models.SET_NULL,
@@ -173,15 +182,12 @@ class Item(models.Model):
         default=False
     )
 
-    # -----------------------------------------------------
-    # CREATED DATE
-    # -----------------------------------------------------
-
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
     def __str__(self):
+
         return self.name
 
 
@@ -213,9 +219,13 @@ class Bid(models.Model):
     )
 
     class Meta:
-        ordering = ['-amount']
+
+        ordering = [
+            '-amount'
+        ]
 
     def __str__(self):
+
         return f"{self.bidder.username} - {self.amount}"
 
 
@@ -240,4 +250,5 @@ class Announcement(models.Model):
     )
 
     def __str__(self):
+
         return self.title
