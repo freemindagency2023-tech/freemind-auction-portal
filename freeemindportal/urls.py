@@ -3,10 +3,6 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from django.contrib.auth import views as auth_views
-
-from auctions import views
-
 
 urlpatterns = [
 
@@ -19,49 +15,13 @@ urlpatterns = [
         admin.site.urls
     ),
 
-
     # =====================================================
-    # AUCTIONS APP (Tumeongeza name='home' kwenye root)
+    # AUCTIONS APP
     # =====================================================
 
     path(
         "",
         include("auctions.urls")
-    ),
-
-
-    # =====================================================
-    # LOGIN
-    # =====================================================
-
-    path(
-        "accounts/login/",
-        views.CustomLoginView.as_view(),
-        name="login",
-    ),
-
-
-    # =====================================================
-    # LOGOUT
-    # =====================================================
-
-    path(
-        "accounts/logout/",
-        auth_views.LogoutView.as_view(
-            next_page="login"
-        ),
-        name="logout",
-    ),
-
-
-    # =====================================================
-    # REGISTER
-    # =====================================================
-
-    path(
-        "accounts/register/",
-        views.register,
-        name="register",
     ),
 ]
 

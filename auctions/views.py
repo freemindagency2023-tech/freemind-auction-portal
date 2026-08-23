@@ -34,7 +34,6 @@ from .models import (
 # =========================================================
 
 def is_admin_user(user):
-
     return (
         user.is_authenticated
         and (
@@ -63,14 +62,21 @@ class CustomLoginView(LoginView):
             user
         )
 
+        # -------------------------------------------------
+        # ADMIN / STAFF
+        # -------------------------------------------------
+
         if (
             user.is_superuser
             or user.is_staff
         ):
-
             return redirect(
                 "auctions:admin_dashboard"
             )
+
+        # -------------------------------------------------
+        # NORMAL USER
+        # -------------------------------------------------
 
         return redirect(
             "auctions:dashboard"
@@ -144,7 +150,6 @@ def auction_list(request):
         "-created_at"
     )
 
-
     # -----------------------------------------------------
     # CATEGORY FILTER
     # -----------------------------------------------------
@@ -172,7 +177,6 @@ def auction_list(request):
         ):
 
             selected_category = None
-
 
     # -----------------------------------------------------
     # SUBCATEGORY FILTER
@@ -227,7 +231,6 @@ def auction_list(request):
 
             selected_subcategory = None
 
-
     # -----------------------------------------------------
     # SUBCATEGORIES
     # -----------------------------------------------------
@@ -243,7 +246,6 @@ def auction_list(request):
     else:
 
         subcategories = SubCategory.objects.none()
-
 
     return render(
         request,
@@ -278,15 +280,12 @@ def notify_users_new_auction(auction_item):
     )
 
     if not recipient_list:
-
         return
-
 
     subject = (
         f"Mnada Mpya Umezinduliwa: "
         f"{auction_item.name}"
     )
-
 
     message = (
         f"Habari!\n\n"
@@ -297,7 +296,6 @@ def notify_users_new_auction(auction_item):
         f"TZS {auction_item.starting_price:,.2f}\n\n"
         f"Ingia kwenye mfumo wetu ili uweke dau lako."
     )
-
 
     try:
 
@@ -310,7 +308,6 @@ def notify_users_new_auction(auction_item):
         )
 
     except Exception:
-
         pass
 
 
@@ -359,13 +356,11 @@ def auction_detail(
         "images",
     ).all()
 
-
     categories = Category.objects.prefetch_related(
         "subcategories"
     ).order_by(
         "name"
     )
-
 
     return render(
         request,
@@ -400,16 +395,13 @@ def item_detail(
         id=item_id
     )
 
-
     highest_bid = item.bids.first()
-
 
     categories = Category.objects.prefetch_related(
         "subcategories"
     ).order_by(
         "name"
     )
-
 
     return render(
         request,
@@ -437,13 +429,11 @@ def category_detail(
         id=category_id
     )
 
-
     subcategories = SubCategory.objects.filter(
         category=category
     ).order_by(
         "name"
     )
-
 
     items = Item.objects.filter(
         category=category
@@ -458,13 +448,11 @@ def category_detail(
         "-created_at"
     )
 
-
     categories = Category.objects.prefetch_related(
         "subcategories"
     ).order_by(
         "name"
     )
-
 
     return render(
         request,
@@ -494,7 +482,6 @@ def subcategory_detail(
         id=subcategory_id
     )
 
-
     items = Item.objects.filter(
         subcategory=subcategory
     ).select_related(
@@ -508,13 +495,11 @@ def subcategory_detail(
         "-created_at"
     )
 
-
     categories = Category.objects.prefetch_related(
         "subcategories"
     ).order_by(
         "name"
     )
-
 
     return render(
         request,
@@ -545,17 +530,14 @@ def add_item(request):
             request.FILES
         )
 
-
         if form.is_valid():
 
             item = form.save()
-
 
             uploaded_images = form.cleaned_data.get(
                 "images",
                 []
             )
-
 
             for uploaded_image in uploaded_images:
 
@@ -564,11 +546,9 @@ def add_item(request):
                     image=uploaded_image
                 )
 
-
             image_count = len(
                 uploaded_images
             )
-
 
             if image_count == 0:
 
@@ -588,7 +568,6 @@ def add_item(request):
                     f"na gallery images {image_count}"
                 )
 
-
             messages.success(
                 request,
                 f'Item "{item.name}" '
@@ -596,11 +575,9 @@ def add_item(request):
                 f"{image_message}."
             )
 
-
             return redirect(
                 "auctions:admin_dashboard"
             )
-
 
         messages.error(
             request,
@@ -609,11 +586,9 @@ def add_item(request):
             "na ujaribu tena."
         )
 
-
     else:
 
         form = ItemForm()
-
 
     return render(
         request,
@@ -646,7 +621,6 @@ def place_bid(
         id=item_id
     )
 
-
     if item.is_sold:
 
         messages.error(
@@ -655,15 +629,12 @@ def place_bid(
             "umeshafungwa!"
         )
 
-
         return redirect(
             "auctions:item_detail",
             item_id=item.id
         )
 
-
     highest_bid = item.bids.first()
-
 
     if request.method == "POST":
 
@@ -671,21 +642,17 @@ def place_bid(
             request.POST
         )
 
-
         if form.is_valid():
 
             bid_amount = form.cleaned_data[
                 "amount"
             ]
 
-
             minimum_bid = item.starting_price
-
 
             if highest_bid:
 
                 minimum_bid = highest_bid.amount
-
 
             if bid_amount <= minimum_bid:
 
@@ -702,13 +669,10 @@ def place_bid(
                     commit=False
                 )
 
-
                 bid.item = item
                 bid.bidder = request.user
 
-
                 bid.save()
-
 
                 messages.success(
                     request,
@@ -716,17 +680,14 @@ def place_bid(
                     "kikamilifu!"
                 )
 
-
                 return redirect(
                     "auctions:item_detail",
                     item_id=item.id
                 )
 
-
     else:
 
         form = BidForm()
-
 
     return render(
         request,
@@ -757,15 +718,12 @@ def close_bidding(
         id=item_id
     )
 
-
     highest_bid = item.bids.first()
-
 
     if highest_bid:
 
         item.winner = highest_bid.bidder
         item.is_sold = True
-
 
         item.save(
             update_fields=[
@@ -774,12 +732,10 @@ def close_bidding(
             ]
         )
 
-
         winner_name = (
             item.winner.first_name
             or item.winner.username
         )
-
 
         messages.success(
             request,
@@ -787,11 +743,9 @@ def close_bidding(
             f"Mshindi ni {winner_name}."
         )
 
-
     else:
 
         item.is_sold = True
-
 
         item.save(
             update_fields=[
@@ -799,13 +753,11 @@ def close_bidding(
             ]
         )
 
-
         messages.warning(
             request,
             "Mnada umefungwa bila "
             "kuwa na ofa yoyote."
         )
-
 
     return redirect(
         "auctions:admin_dashboard"
@@ -828,7 +780,6 @@ def dashboard(request):
             "auctions:admin_dashboard"
         )
 
-
     bids = Bid.objects.filter(
         bidder=request.user
     ).select_related(
@@ -840,7 +791,6 @@ def dashboard(request):
         "-created_at"
     )
 
-
     won_items = Item.objects.filter(
         winner=request.user
     ).select_related(
@@ -850,7 +800,6 @@ def dashboard(request):
     ).prefetch_related(
         "images"
     )
-
 
     return render(
         request,
@@ -878,7 +827,6 @@ def dashboard_redirect(request):
             "auctions:admin_dashboard"
         )
 
-
     return redirect(
         "auctions:dashboard"
     )
@@ -900,11 +848,9 @@ def admin_dashboard(request):
             "auctions:dashboard"
         )
 
-
     auctions = Auction.objects.all().order_by(
         "-created_at"
     )
-
 
     items = Item.objects.select_related(
         "auction",
@@ -917,7 +863,6 @@ def admin_dashboard(request):
         "-created_at"
     )
 
-
     bids = Bid.objects.select_related(
         "item",
         "bidder",
@@ -925,11 +870,9 @@ def admin_dashboard(request):
         "-created_at"
     )
 
-
     announcements = Announcement.objects.all().order_by(
         "-created_at"
     )
-
 
     categories = Category.objects.prefetch_related(
         "subcategories"
@@ -937,14 +880,12 @@ def admin_dashboard(request):
         "name"
     )
 
-
     subcategories = SubCategory.objects.select_related(
         "category"
     ).order_by(
         "category__name",
         "name"
     )
-
 
     return render(
         request,
@@ -976,9 +917,7 @@ def edit_bid(
         bidder=request.user
     )
 
-
     item = bid.item
-
 
     if item.is_sold:
 
@@ -988,14 +927,11 @@ def edit_bid(
             "mnada umekwisha fungwa!"
         )
 
-
         return redirect(
             "auctions:dashboard"
         )
 
-
     highest_bid = item.bids.first()
-
 
     if request.method == "POST":
 
@@ -1004,16 +940,13 @@ def edit_bid(
             instance=bid
         )
 
-
         if form.is_valid():
 
             bid_amount = form.cleaned_data[
                 "amount"
             ]
 
-
             minimum_bid = item.starting_price
-
 
             if (
                 highest_bid
@@ -1021,7 +954,6 @@ def edit_bid(
             ):
 
                 minimum_bid = highest_bid.amount
-
 
             if bid_amount <= minimum_bid:
 
@@ -1036,25 +968,21 @@ def edit_bid(
 
                 form.save()
 
-
                 messages.success(
                     request,
                     "Dau lako limesasishwa "
                     "kwa mafanikio!"
                 )
 
-
                 return redirect(
                     "auctions:dashboard"
                 )
-
 
     else:
 
         form = BidForm(
             instance=bid
         )
-
 
     return render(
         request,
@@ -1083,7 +1011,6 @@ def delete_bid(
         bidder=request.user
     )
 
-
     if bid.item.is_sold:
 
         messages.error(
@@ -1092,16 +1019,13 @@ def delete_bid(
             "mnada umekwisha fungwa!"
         )
 
-
         return redirect(
             "auctions:dashboard"
         )
 
-
     if request.method == "POST":
 
         bid.delete()
-
 
         messages.success(
             request,
@@ -1109,11 +1033,9 @@ def delete_bid(
             "kwa mafanikio!"
         )
 
-
         return redirect(
             "auctions:dashboard"
         )
-
 
     return render(
         request,
@@ -1136,13 +1058,11 @@ def announcements(request):
         "-created_at"
     )
 
-
     categories = Category.objects.prefetch_related(
         "subcategories"
     ).order_by(
         "name"
     )
-
 
     return render(
         request,
@@ -1169,13 +1089,11 @@ def announcement_detail(
         published=True
     )
 
-
     categories = Category.objects.prefetch_related(
         "subcategories"
     ).order_by(
         "name"
     )
-
 
     return render(
         request,
@@ -1204,11 +1122,9 @@ def register(request):
                 "auctions:admin_dashboard"
             )
 
-
         return redirect(
             "auctions:dashboard"
         )
-
 
     if request.method == "POST":
 
@@ -1216,11 +1132,9 @@ def register(request):
             request.POST
         )
 
-
         if form.is_valid():
 
             form.save()
-
 
             messages.success(
                 request,
@@ -1230,21 +1144,10 @@ def register(request):
                 "kwa kutumia email yako."
             )
 
-
             return redirect(
                 "auctions:login"
             )
 
-
     else:
 
-        form = RegisterForm()
-
-
-    return render(
-        request,
-        "registration/register.html",
-        {
-            "form": form,
-        }
-    )
+        form = Register

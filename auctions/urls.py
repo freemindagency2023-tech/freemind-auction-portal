@@ -13,6 +13,20 @@ urlpatterns = [
     # =====================================================
 
     path(
+        "login/",
+        views.CustomLoginView.as_view(),
+        name="login",
+    ),
+
+    path(
+        "logout/",
+        auth_views.LogoutView.as_view(
+            next_page="/login/"
+        ),
+        name="logout",
+    ),
+
+    path(
         "register/",
         views.register,
         name="register",
@@ -20,7 +34,9 @@ urlpatterns = [
 
     path(
         "password-reset/",
-        auth_views.PasswordResetView.as_view(template_name='registration/password_reset_form.html'),
+        auth_views.PasswordResetView.as_view(
+            template_name="registration/password_reset_form.html"
+        ),
         name="password_reset",
     ),
 
@@ -46,7 +62,6 @@ urlpatterns = [
         name="auction_detail",
     ),
 
-
     # =====================================================
     # USER DASHBOARD
     # =====================================================
@@ -62,7 +77,6 @@ urlpatterns = [
         views.dashboard_redirect,
         name="dashboard_redirect",
     ),
-
 
     # =====================================================
     # ADMIN DASHBOARD
@@ -86,7 +100,6 @@ urlpatterns = [
         name="close_bidding",
     ),
 
-
     # =====================================================
     # ITEM DETAIL
     # =====================================================
@@ -97,7 +110,6 @@ urlpatterns = [
         name="item_detail",
     ),
 
-
     # =====================================================
     # PLACE BID
     # =====================================================
@@ -107,7 +119,6 @@ urlpatterns = [
         views.place_bid,
         name="place_bid",
     ),
-
 
     # =====================================================
     # EDIT / DELETE BID
@@ -125,7 +136,6 @@ urlpatterns = [
         name="delete_bid",
     ),
 
-
     # =====================================================
     # CATEGORY
     # =====================================================
@@ -136,7 +146,6 @@ urlpatterns = [
         name="category_detail",
     ),
 
-
     # =====================================================
     # SUBCATEGORY
     # =====================================================
@@ -146,7 +155,6 @@ urlpatterns = [
         views.subcategory_detail,
         name="subcategory_detail",
     ),
-
 
     # =====================================================
     # ANNOUNCEMENTS
