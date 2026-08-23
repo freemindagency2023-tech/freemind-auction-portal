@@ -3,6 +3,7 @@
 {% block title %}Dashboard - Freemind Auction Agency{% endblock %}
 
 {% block content %}
+
 <style>
     .dashboard-container {
         display: grid;
@@ -44,6 +45,7 @@
     .dash-menu {
         list-style: none;
         padding: 0;
+        margin: 0;
     }
 
     .dash-menu li {
@@ -63,7 +65,8 @@
         transition: all 0.2s ease;
     }
 
-    .dash-menu a:hover, .dash-menu a.active {
+    .dash-menu a:hover,
+    .dash-menu a.active {
         background: #f0f9ff;
         color: #0284c7;
     }
@@ -186,112 +189,350 @@
     }
 </style>
 
+
 <div class="dashboard-container">
-    
-    <!-- LEFT SIDEBAR -->
+
+    <!-- =================================================
+         LEFT SIDEBAR
+    ================================================== -->
+
     <aside class="dash-sidebar">
+
         <div class="user-profile">
+
             <div class="user-avatar-icon">
                 <i class="fa-solid fa-user-check"></i>
             </div>
-            <h3 style="font-size: 1.1rem !important; margin: 0 !important; border: none !important; color: #0f172a !important;">
+
+            <h3 style="
+                font-size: 1.1rem !important;
+                margin: 0 !important;
+                border: none !important;
+                color: #0f172a !important;
+            ">
                 {{ request.user.username }}
             </h3>
-            <span style="font-size: 0.825rem; color: #64748b;">Mtumiaji Aliyejisajili</span>
+
+            <span style="
+                font-size: 0.825rem;
+                color: #64748b;
+            ">
+                Mtumiaji Aliyejisajili
+            </span>
+
         </div>
+
 
         <ul class="dash-menu">
+
+            <!-- DASHBOARD -->
+
             <li>
-                <a href="{% url 'dashboard' %}" class="active">
-                    <i class="fa-solid fa-chart-pie"></i> Dashboard
+                <a
+                    href="{% url 'auctions:dashboard' %}"
+                    class="active"
+                >
+                    <i class="fa-solid fa-chart-pie"></i>
+                    Dashboard
                 </a>
             </li>
+
+
+            <!-- AUCTIONS -->
+
             <li>
-                <a href="{% url 'auction_list' %}">
-                    <i class="fa-solid fa-gavel"></i> Minada Yote
+                <a href="{% url 'auctions:auction_list' %}">
+                    <i class="fa-solid fa-gavel"></i>
+                    Minada Yote
                 </a>
             </li>
+
+
+            <!-- LOGOUT -->
+
             <li>
-                <a href="/accounts/logout/" style="color: #d32f2f;">
-                    <i class="fa-solid fa-right-from-bracket"></i> Logout
-                </a>
+                <form
+                    action="{% url 'auctions:logout' %}"
+                    method="post"
+                    style="margin: 0;"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        style="
+                            width: 100%;
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            padding: 12px 16px;
+                            background: transparent;
+                            border: none;
+                            color: #d32f2f;
+                            border-radius: 10px;
+                            font-weight: 600;
+                            font-size: 0.925rem;
+                            cursor: pointer;
+                            text-align: left;
+                            font-family: inherit;
+                        "
+                    >
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        Logout
+                    </button>
+
+                </form>
             </li>
+
         </ul>
+
     </aside>
 
-    <!-- MAIN DASHBOARD CONTENT -->
-    <main class="dash-main">
-        <h1 class="dash-header-title">DASHBOARD YA MTUMIAJI</h1>
-        <p>Karibu kwenye mfumo. Hapa unaweza kufuatilia na kurekebisha madao yako yote uliyoweka kwenye minada.</p>
 
-        <!-- CARDS / STATS -->
+    <!-- =================================================
+         MAIN DASHBOARD CONTENT
+    ================================================== -->
+
+    <main class="dash-main">
+
+        <h1 class="dash-header-title">
+            DASHBOARD YA MTUMIAJI
+        </h1>
+
+        <p>
+            Karibu kwenye mfumo. Hapa unaweza kufuatilia
+            na kurekebisha madao yako yote uliyoweka
+            kwenye minada.
+        </p>
+
+
+        <!-- =================================================
+             STATS
+        ================================================== -->
+
         <div class="stats-grid">
+
             <div class="stat-card">
-                <div class="stat-icon-wrapper" style="background: #e0f2fe; color: #0284c7;">
+
+                <div
+                    class="stat-icon-wrapper"
+                    style="
+                        background: #e0f2fe;
+                        color: #0284c7;
+                    "
+                >
                     <i class="fa-solid fa-gavel"></i>
                 </div>
+
                 <div>
-                    <h4 style="margin: 0 !important; font-size: 0.75rem !important; color: #64748b !important; border: none !important;">MADAO ULIYOWEKA</h4>
-                    <span style="font-size: 1.6rem; font-weight: 800; color: #0f172a;">{{ bids.count }}</span>
+
+                    <h4 style="
+                        margin: 0 !important;
+                        font-size: 0.75rem !important;
+                        color: #64748b !important;
+                        border: none !important;
+                    ">
+                        MADAO ULIYOWEKA
+                    </h4>
+
+                    <span style="
+                        font-size: 1.6rem;
+                        font-weight: 800;
+                        color: #0f172a;
+                    ">
+                        {{ bids.count }}
+                    </span>
+
                 </div>
+
             </div>
+
 
             <div class="stat-card">
-                <div class="stat-icon-wrapper" style="background: #fef3c7; color: #b45309;">
+
+                <div
+                    class="stat-icon-wrapper"
+                    style="
+                        background: #fef3c7;
+                        color: #b45309;
+                    "
+                >
                     <i class="fa-solid fa-clock-rotate-left"></i>
                 </div>
+
                 <div>
-                    <h4 style="margin: 0 !important; font-size: 0.75rem !important; color: #64748b !important; border: none !important;">HALI YA AKAUNTI</h4>
-                    <span class="badge-status">Active</span>
+
+                    <h4 style="
+                        margin: 0 !important;
+                        font-size: 0.75rem !important;
+                        color: #64748b !important;
+                        border: none !important;
+                    ">
+                        HALI YA AKAUNTI
+                    </h4>
+
+                    <span class="badge-status">
+                        Active
+                    </span>
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- BIDS TABLE SECTION -->
+
+        <!-- =================================================
+             BIDS TABLE
+        ================================================== -->
+
         <div class="table-card">
-            <h3 style="margin-top: 0 !important; border-bottom: none !important;">HISTORIA YA MADAO YAKO</h3>
-            
+
+            <h3 style="
+                margin-top: 0 !important;
+                border-bottom: none !important;
+            ">
+                HISTORIA YA MADAO YAKO
+            </h3>
+
+
             {% if bids %}
+
                 <div style="overflow-x: auto;">
+
                     <table class="custom-table">
+
                         <thead>
+
                             <tr>
-                                <th>Bidhaa (Item)</th>
-                                <th>Mnada (Auction)</th>
-                                <th>Kiasi cha Dau</th>
-                                <th>Tarehe & Muda</th>
-                                <th>Vitendo (Actions)</th>
+
+                                <th>
+                                    Bidhaa (Item)
+                                </th>
+
+                                <th>
+                                    Mnada (Auction)
+                                </th>
+
+                                <th>
+                                    Kiasi cha Dau
+                                </th>
+
+                                <th>
+                                    Tarehe & Muda
+                                </th>
+
+                                <th>
+                                    Vitendo (Actions)
+                                </th>
+
                             </tr>
+
                         </thead>
+
+
                         <tbody>
+
                             {% for bid in bids %}
+
                                 <tr>
-                                    <td><strong>{{ bid.item.title }}</strong></td>
-                                    <td>{{ bid.item.auction.title }}</td>
-                                    <td style="color: #0284c7; font-weight: 700;">TZS {{ bid.amount }}</td>
-                                    <td>{{ bid.created_at|date:"d M Y, H:i" }}</td>
+
                                     <td>
-                                        <a href="{% url 'edit_bid' bid.id %}" class="btn-action-edit">
-                                            <i class="fa-solid fa-pen-to-square"></i> Edit
-                                        </a>
-                                        <a href="{% url 'delete_bid' bid.id %}" class="btn-action-delete">
-                                            <i class="fa-solid fa-trash"></i> Delete
-                                        </a>
+                                        <strong>
+                                            {{ bid.item.name }}
+                                        </strong>
                                     </td>
+
+                                    <td>
+                                        {{ bid.item.auction.title }}
+                                    </td>
+
+                                    <td style="
+                                        color: #0284c7;
+                                        font-weight: 700;
+                                    ">
+                                        TZS {{ bid.amount }}
+                                    </td>
+
+                                    <td>
+                                        {{ bid.created_at|date:"d M Y, H:i" }}
+                                    </td>
+
+                                    <td>
+
+                                        <a
+                                            href="{% url 'auctions:edit_bid' bid.id %}"
+                                            class="btn-action-edit"
+                                        >
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                            Edit
+                                        </a>
+
+
+                                        <a
+                                            href="{% url 'auctions:delete_bid' bid.id %}"
+                                            class="btn-action-delete"
+                                        >
+                                            <i class="fa-solid fa-trash"></i>
+                                            Delete
+                                        </a>
+
+                                    </td>
+
                                 </tr>
+
                             {% endfor %}
+
                         </tbody>
+
                     </table>
+
                 </div>
+
             {% else %}
-                <div style="text-align: center; padding: 40px 20px; background: #f8fafc; border-radius: 12px; margin-top: 15px;">
-                    <i class="fa-solid fa-gavel" style="font-size: 2.5rem; color: #cbd5e1; margin-bottom: 10px;"></i>
-                    <p style="margin: 0 !important;">Bado hujaweka dau lolote kwenye mnada wowote.</p>
-                    <a href="{% url 'auction_list' %}" class="btn" style="margin-top: 15px; font-size: 0.85rem;">Angalia Minada Iliyopo</a>
+
+                <div style="
+                    text-align: center;
+                    padding: 40px 20px;
+                    background: #f8fafc;
+                    border-radius: 12px;
+                    margin-top: 15px;
+                ">
+
+                    <i
+                        class="fa-solid fa-gavel"
+                        style="
+                            font-size: 2.5rem;
+                            color: #cbd5e1;
+                            margin-bottom: 10px;
+                        "
+                    ></i>
+
+                    <p style="margin: 0 !important;">
+                        Bado hujaweka dau lolote kwenye mnada wowote.
+                    </p>
+
+
+                    <a
+                        href="{% url 'auctions:auction_list' %}"
+                        class="btn"
+                        style="
+                            margin-top: 15px;
+                            font-size: 0.85rem;
+                        "
+                    >
+                        Angalia Minada Iliyopo
+                    </a>
+
                 </div>
+
             {% endif %}
+
         </div>
+
     </main>
 
 </div>
+
 {% endblock %}
