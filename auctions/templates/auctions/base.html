@@ -627,7 +627,7 @@
 
         <!-- LOGO -->
 
-        <a class="logo" href="{% url 'home' %}">
+        <a class="logo" href="{% url 'auctions:home' %}">
 
             <i
                 class="fa-solid fa-gavel"
@@ -648,7 +648,7 @@
 
             <!-- HOME -->
 
-            <a href="{% url 'home' %}">
+            <a href="{% url 'auctions:home' %}">
 
                 <i class="fa-solid fa-house"></i>
 
@@ -659,7 +659,7 @@
 
             <!-- AUCTIONS -->
 
-            <a href="{% url 'auction_list' %}">
+            <a href="{% url 'auctions:auction_list' %}">
 
                 <i class="fa-solid fa-layer-group"></i>
 
@@ -679,7 +679,7 @@
 
                     <!-- ADMIN DASHBOARD -->
 
-                    <a href="{% url 'admin_dashboard' %}">
+                    <a href="{% url 'auctions:admin_dashboard' %}">
 
                         <i class="fa-solid fa-gauge-high"></i>
 
@@ -691,7 +691,7 @@
 
                     <!-- NORMAL USER DASHBOARD -->
 
-                    <a href="{% url 'dashboard' %}">
+                    <a href="{% url 'auctions:dashboard' %}">
 
                         <i class="fa-solid fa-chart-line"></i>
 
@@ -825,7 +825,7 @@
 
                 <a
                     class="logo"
-                    href="{% url 'home' %}"
+                    href="{% url 'auctions:home' %}"
                     style="
                         color: #ffffff !important;
                         margin-bottom: 14px;
@@ -866,14 +866,14 @@
                 <ul class="footer-links">
 
                     <li>
-                        <a href="{% url 'home' %}">
+                        <a href="{% url 'auctions:home' %}">
                             Nyumbani (Home)
                         </a>
                     </li>
 
 
                     <li>
-                        <a href="{% url 'auction_list' %}">
+                        <a href="{% url 'auctions:auction_list' %}">
                             Orodha ya Minada
                         </a>
                     </li>
@@ -885,7 +885,7 @@
 
                             <li>
 
-                                <a href="{% url 'admin_dashboard' %}">
+                                <a href="{% url 'auctions:admin_dashboard' %}">
 
                                     Admin Dashboard
 
@@ -897,7 +897,7 @@
 
                             <li>
 
-                                <a href="{% url 'dashboard' %}">
+                                <a href="{% url 'auctions:dashboard' %}">
 
                                     Dashboard Yangu
 
