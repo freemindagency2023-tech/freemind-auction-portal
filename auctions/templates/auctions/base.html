@@ -9,29 +9,18 @@
         {% block title %}Freemind Auction Agency{% endblock %}
     </title>
 
-    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
 
-    <!-- Font Awesome -->
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    >
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
 
-        /* =====================================================
-           DESIGN SYSTEM
-        ===================================================== */
-
         :root {
-
             --bg-main: #f8fafc;
             --bg-card: #ffffff;
             --bg-nav: rgba(255, 255, 255, 0.95);
@@ -50,27 +39,18 @@
             --radius-md: 16px;
         }
 
-
-        /* =====================================================
-           RESET
-        ===================================================== */
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
-
         html {
             scroll-behavior: smooth;
         }
 
-
         body {
-
             min-height: 100vh;
-
             font-family:
                 'Plus Jakarta Sans',
                 -apple-system,
@@ -78,174 +58,107 @@
                 sans-serif;
 
             color: var(--text-main);
-
             background-color: var(--bg-main);
-
             line-height: 1.6;
 
             display: flex;
             flex-direction: column;
         }
 
-
-        /* =====================================================
-           TYPOGRAPHY
-        ===================================================== */
-
         h1,
         h2,
         h3,
         h4 {
-
             color: var(--text-heading) !important;
-
             font-weight: 800 !important;
-
             letter-spacing: 0.3px;
-
             margin-top: 15px;
-
             margin-bottom: 12px;
-
             line-height: 1.3;
         }
-
 
         h1 {
             font-size: 2rem;
         }
 
-
         h2 {
             font-size: 1.5rem;
         }
-
 
         h3 {
             font-size: 1.2rem;
         }
 
-
         h4 {
             font-size: 1rem;
         }
 
-
         p {
-
             color: var(--text-muted) !important;
-
             font-size: 0.95rem;
-
             font-weight: 400;
-
             line-height: 1.6;
-
             margin-bottom: 12px;
         }
 
-
         strong,
         b {
-
             color: #0f172a;
-
             font-weight: 700;
         }
 
-
-        /* =====================================================
-           BUTTONS
-        ===================================================== */
-
         .btn {
-
             display: inline-flex;
-
             align-items: center;
-
             justify-content: center;
-
             gap: 8px;
 
             padding: 10px 20px;
 
             background: var(--primary-red);
-
             color: #ffffff;
 
             text-decoration: none;
-
             border: none;
-
             border-radius: var(--radius-sm);
 
             font-size: 0.9rem;
-
             font-weight: 700;
 
             cursor: pointer;
-
             transition: all 0.25s ease;
         }
 
-
         .btn:hover {
-
             background: #b71c1c;
-
             transform: translateY(-2px);
-
-            color: #ffffff;
         }
-
 
         .btn-outline {
-
             background: transparent;
-
             border: 1px solid var(--border-color);
-
             color: var(--text-main);
         }
-
 
         .btn-outline:hover {
-
             background: #f1f5f9;
-
-            color: var(--text-main);
         }
 
-
-        /* =====================================================
-           LOGOUT
-        ===================================================== */
-
         .logout-form {
-
             display: inline-flex;
-
             margin: 0;
-
             padding: 0;
         }
 
-
         .logout-btn {
-
             background: transparent;
-
             border: 1px solid var(--border-color);
-
             color: var(--text-main);
 
             padding: 6px 14px;
 
             font-size: 0.85rem;
-
             font-weight: 700;
-
             font-family: inherit;
 
             border-radius: var(--radius-sm);
@@ -253,49 +166,32 @@
             cursor: pointer;
 
             display: inline-flex;
-
             align-items: center;
-
             gap: 6px;
 
             transition: all 0.25s ease;
         }
 
-
         .logout-btn:hover {
-
             background: #f1f5f9;
-
             color: var(--primary-red);
-
             border-color: #cbd5e1;
         }
 
-
-        /* =====================================================
-           NAVIGATION
-        ===================================================== */
-
         nav {
-
             width: 100%;
 
             background: var(--bg-nav);
-
             border-bottom: 1px solid var(--border-color);
 
             padding: 16px 6%;
 
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
 
             position: sticky;
-
             top: 0;
-
             z-index: 1000;
 
             backdrop-filter: blur(12px);
@@ -304,81 +200,52 @@
                 0 4px 20px rgba(0, 0, 0, 0.03);
         }
 
-
         .logo {
-
             color: var(--text-heading);
-
             text-decoration: none;
 
             font-size: 1.25rem;
-
             font-weight: 800;
 
             display: flex;
-
             align-items: center;
-
             gap: 10px;
 
             text-transform: uppercase;
         }
 
-
         .nav-links {
-
             display: flex;
-
             align-items: center;
-
             gap: 24px;
         }
 
-
         .nav-links a {
-
             color: var(--text-muted);
-
             text-decoration: none;
 
             font-size: 0.925rem;
-
             font-weight: 600;
 
             transition: all 0.25s ease;
 
             display: inline-flex;
-
             align-items: center;
-
             gap: 6px;
         }
 
-
         .nav-links a:hover {
-
             color: var(--accent-blue);
         }
 
-
         .nav-auth {
-
             display: flex;
-
             align-items: center;
-
             gap: 12px;
         }
 
-
-        /* =====================================================
-           MAIN CONTAINER
-        ===================================================== */
-
         .container {
-
             width: 90%;
-
             max-width: 1280px;
 
             margin: 0 auto;
@@ -388,37 +255,10 @@
             flex: 1;
         }
 
-
-        /* =====================================================
-           MESSAGES
-        ===================================================== */
-
-        .message {
-
-            padding: 12px 18px;
-
-            background: #e0f2fe;
-
-            border: 1px solid #bae6fd;
-
-            border-radius: 8px;
-
-            color: #0369a1;
-
-            margin-bottom: 20px;
-        }
-
-
-        /* =====================================================
-           FOOTER
-        ===================================================== */
-
         footer {
-
             margin-top: auto;
 
             background: var(--bg-footer);
-
             color: #94a3b8;
 
             padding: 50px 0 0;
@@ -426,11 +266,8 @@
             border-top: 1px solid #1e293b;
         }
 
-
         .footer-container {
-
             width: 90%;
-
             max-width: 1280px;
 
             margin: 0 auto;
@@ -445,43 +282,29 @@
             padding-bottom: 40px;
         }
 
-
         .footer-col h3,
         .footer-col h4 {
-
             color: #f8fafc !important;
-
             margin-bottom: 18px;
-
             font-size: 1.05rem !important;
-
             border-bottom: none;
         }
 
-
         .footer-col p {
-
             color: #94a3b8 !important;
-
             font-size: 0.9rem;
         }
 
-
         .footer-links {
-
             list-style: none;
         }
 
-
         .footer-links li {
-
             margin-bottom: 10px;
         }
 
-
         .footer-links a,
         .footer-links button {
-
             color: #94a3b8;
 
             text-decoration: none;
@@ -491,7 +314,6 @@
             transition: all 0.25s ease;
 
             background: none;
-
             border: none;
 
             cursor: pointer;
@@ -499,24 +321,17 @@
             font-family: inherit;
         }
 
-
         .footer-links a:hover,
         .footer-links button:hover {
-
             color: #f8fafc;
         }
 
-
         .contact-info {
-
             list-style: none;
         }
 
-
         .contact-info li {
-
             display: flex;
-
             align-items: flex-start;
 
             gap: 12px;
@@ -526,25 +341,17 @@
             font-size: 0.9rem;
         }
 
-
         .contact-info i {
-
             color: #38bdf8;
-
             margin-top: 4px;
         }
 
-
         .contact-info a {
-
             color: #94a3b8;
-
             text-decoration: none;
         }
 
-
         .footer-bottom {
-
             background: #020617;
 
             padding: 20px 0;
@@ -552,19 +359,14 @@
             border-top: 1px solid #1e293b;
         }
 
-
         .footer-bottom-content {
-
             width: 90%;
-
             max-width: 1280px;
 
             margin: 0 auto;
 
             display: flex;
-
             align-items: center;
-
             justify-content: space-between;
 
             flex-wrap: wrap;
@@ -576,31 +378,22 @@
             color: #64748b;
         }
 
-
         .social-icons {
-
             display: flex;
-
             gap: 12px;
         }
 
-
         .social-icons a {
-
             width: 36px;
-
             height: 36px;
 
             border-radius: 50%;
 
             background: #1e293b;
-
             color: #f8fafc;
 
             display: flex;
-
             align-items: center;
-
             justify-content: center;
 
             text-decoration: none;
@@ -608,50 +401,26 @@
             transition: all 0.25s ease;
         }
 
-
         .social-icons a:hover {
-
             background: var(--primary-red);
         }
-
-
-        /* =====================================================
-           MOBILE
-        ===================================================== */
 
         @media (max-width: 768px) {
 
             nav {
-
                 flex-direction: column;
-
                 gap: 14px;
-
                 padding: 14px 20px;
             }
 
-
             .nav-links {
-
                 flex-wrap: wrap;
-
                 justify-content: center;
-
                 gap: 14px;
             }
 
-
             .footer-container {
-
                 grid-template-columns: 1fr;
-            }
-
-
-            .container {
-
-                width: 94%;
-
-                padding-top: 20px;
             }
         }
 
@@ -659,507 +428,341 @@
 
 </head>
 
-
 <body>
 
+<nav>
 
-    <!-- =====================================================
-         NAVIGATION BAR
-    ===================================================== -->
+    <a class="logo"
+       href="{% url 'auctions:auction_list' %}">
 
-    <nav>
+        <i class="fa-solid fa-gavel"
+           style="color: var(--primary-red);">
+        </i>
+
+        FREEMIND
+
+        <span style="color: var(--accent-blue);">
+            AUCTION
+        </span>
+
+    </a>
 
 
-        <!-- LOGO -->
+    <div class="nav-links">
 
-        <a
-            class="logo"
-            href="{% url 'auctions:auction_list' %}"
-        >
-
-            <i
-                class="fa-solid fa-gavel"
-                style="color: var(--primary-red);"
-            ></i>
-
-            FREEMIND
-
-            <span style="color: var(--accent-blue);">
-                AUCTION
-            </span>
-
+        <a href="{% url 'auctions:auction_list' %}">
+            <i class="fa-solid fa-house"></i>
+            Home
         </a>
 
 
-        <div class="nav-links">
+        <a href="{% url 'auctions:auction_list' %}">
+            <i class="fa-solid fa-layer-group"></i>
+            Auctions
+        </a>
 
 
-            <!-- HOME -->
+        {% if user.is_authenticated %}
 
-            <a href="{% url 'auctions:auction_list' %}">
+            {% if user.is_staff or user.is_superuser %}
 
-                <i class="fa-solid fa-house"></i>
-
-                Home
-
-            </a>
-
-
-            <!-- AUCTIONS -->
-
-            <a href="{% url 'auctions:auction_list' %}">
-
-                <i class="fa-solid fa-layer-group"></i>
-
-                Auctions
-
-            </a>
-
-
-            {% if user.is_authenticated %}
-
-
-                <!-- =================================================
-                     USER / ADMIN DASHBOARD
-                ================================================== -->
-
-                {% if user.is_staff or user.is_superuser %}
-
-
-                    <!-- ADMIN -->
-
-                    <a
-                        href="{% url 'auctions:admin_dashboard' %}"
-                    >
-
-                        <i class="fa-solid fa-gauge-high"></i>
-
-                        Admin Dashboard
-
-                    </a>
-
-
-                {% else %}
-
-
-                    <!-- NORMAL USER -->
-
-                    <a
-                        href="{% url 'auctions:dashboard' %}"
-                    >
-
-                        <i class="fa-solid fa-chart-line"></i>
-
-                        Dashboard
-
-                    </a>
-
-
-                {% endif %}
-
-
-                <!-- =================================================
-                     LOGOUT
-                     
-                     IMPORTANT:
-                     Project urls.py ina:
-                     name="logout"
-                ================================================== -->
-
-                <form
-                    action="{% url 'logout' %}"
-                    method="post"
-                    class="logout-form"
-                >
-
-                    {% csrf_token %}
-
-                    <button
-                        type="submit"
-                        class="logout-btn"
-                    >
-
-                        <i class="fa-solid fa-right-from-bracket"></i>
-
-                        Logout
-
-                    </button>
-
-                </form>
-
+                <a href="{% url 'auctions:admin_dashboard' %}">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    Admin Dashboard
+                </a>
 
             {% else %}
 
-
-                <!-- =================================================
-                     LOGIN / REGISTER
-                ================================================== -->
-
-                <div class="nav-auth">
-
-
-                    <a
-                        href="{% url 'login' %}"
-                        class="btn btn-outline"
-                        style="
-                            padding: 6px 14px;
-                            font-size: 0.85rem;
-                        "
-                    >
-
-                        Login
-
-                    </a>
-
-
-                    <a
-                        href="{% url 'register' %}"
-                        class="btn"
-                        style="
-                            padding: 6px 14px;
-                            font-size: 0.85rem;
-                        "
-                    >
-
-                        Register
-
-                    </a>
-
-
-                </div>
-
+                <a href="{% url 'auctions:dashboard' %}">
+                    <i class="fa-solid fa-chart-line"></i>
+                    Dashboard
+                </a>
 
             {% endif %}
 
 
-        </div>
+            <form
+                action="{% url 'auctions:logout' %}"
+                method="post"
+                class="logout-form">
 
-    </nav>
+                {% csrf_token %}
 
+                <button
+                    type="submit"
+                    class="logout-btn">
 
-    <!-- =====================================================
-         MAIN CONTENT
-    ===================================================== -->
+                    <i class="fa-solid fa-right-from-bracket"></i>
 
-    <main class="container">
+                    Logout
 
+                </button>
 
-        {% if messages %}
-
-            {% for message in messages %}
-
-                <div class="message">
-
-                    <i class="fa-solid fa-circle-info"></i>
-
-                    <span>
-                        {{ message }}
-                    </span>
-
-                </div>
-
-            {% endfor %}
-
-        {% endif %}
+            </form>
 
 
-        {% block content %}
+        {% else %}
 
-        {% endblock %}
-
-
-    </main>
-
-
-    <!-- =====================================================
-         FOOTER
-    ===================================================== -->
-
-    <footer>
-
-
-        <div class="footer-container">
-
-
-            <!-- COMPANY -->
-
-            <div class="footer-col">
-
+            <div class="nav-auth">
 
                 <a
-                    class="logo"
-                    href="{% url 'auctions:auction_list' %}"
-                    style="
-                        color: #ffffff !important;
-                        margin-bottom: 14px;
-                    "
-                >
+                    href="{% url 'auctions:login' %}"
+                    class="btn btn-outline"
+                    style="padding: 6px 14px; font-size: 0.85rem;">
 
-                    <i
-                        class="fa-solid fa-gavel"
-                        style="color: var(--primary-red);"
-                    ></i>
-
-                    FREEMIND
-
-                    <span style="color: #38bdf8;">
-                        AUCTION
-                    </span>
+                    Login
 
                 </a>
 
 
-                <p>
+                <a
+                    href="{% url 'auctions:register' %}"
+                    class="btn"
+                    style="padding: 6px 14px; font-size: 0.85rem;">
 
-                    Freemind Auction Agency ni dalali na wakala
-                    wa minada wa kitaalamu kwa uwazi na ufanisi.
+                    Register
 
-                </p>
-
+                </a>
 
             </div>
 
+        {% endif %}
 
-            <!-- QUICK LINKS -->
+    </div>
 
-            <div class="footer-col">
-
-
-                <h4>
-                    Kurasa za Haraka
-                </h4>
+</nav>
 
 
-                <ul class="footer-links">
+<main class="container">
+
+    {% if messages %}
+
+        {% for message in messages %}
+
+            <div
+                class="message"
+                style="
+                    padding: 12px 18px;
+                    background: #e0f2fe;
+                    border: 1px solid #bae6fd;
+                    border-radius: 8px;
+                    color: #0369a1;
+                    margin-bottom: 20px;
+                ">
+
+                <i class="fa-solid fa-circle-info"></i>
+
+                <span>
+                    {{ message }}
+                </span>
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
 
 
-                    <li>
+    {% block content %}
 
-                        <a
-                            href="{% url 'auctions:auction_list' %}"
-                        >
+    {% endblock %}
 
-                            Nyumbani (Home)
-
-                        </a>
-
-                    </li>
+</main>
 
 
-                    <li>
+<footer>
 
-                        <a
-                            href="{% url 'auctions:auction_list' %}"
-                        >
+    <div class="footer-container">
 
-                            Orodha ya Minada
+        <div class="footer-col">
 
-                        </a>
+            <a
+                class="logo"
+                href="{% url 'auctions:auction_list' %}"
+                style="
+                    color: #ffffff !important;
+                    margin-bottom: 14px;
+                ">
 
-                    </li>
+                <i
+                    class="fa-solid fa-gavel"
+                    style="color: var(--primary-red);">
+                </i>
 
+                FREEMIND
 
-                    {% if user.is_authenticated %}
+                <span style="color: #38bdf8;">
+                    AUCTION
+                </span>
 
+            </a>
 
-                        {% if user.is_staff or user.is_superuser %}
+            <p>
+                Freemind Auction Agency ni dalali na wakala
+                wa minada wa kitaalamu kwa uwazi na ufanisi.
+            </p>
 
-
-                            <li>
-
-                                <a
-                                    href="{% url 'auctions:admin_dashboard' %}"
-                                >
-
-                                    Admin Dashboard
-
-                                </a>
-
-                            </li>
-
-
-                        {% else %}
-
-
-                            <li>
-
-                                <a
-                                    href="{% url 'auctions:dashboard' %}"
-                                >
-
-                                    Dashboard Yangu
-
-                                </a>
-
-                            </li>
+        </div>
 
 
-                        {% endif %}
+        <div class="footer-col">
 
+            <h4>
+                Kurasa za Haraka
+            </h4>
+
+            <ul class="footer-links">
+
+                <li>
+                    <a href="{% url 'auctions:auction_list' %}">
+                        Nyumbani (Home)
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{% url 'auctions:auction_list' %}">
+                        Orodha ya Minada
+                    </a>
+                </li>
+
+                {% if user.is_authenticated %}
+
+                    {% if user.is_staff or user.is_superuser %}
+
+                        <li>
+                            <a href="{% url 'auctions:admin_dashboard' %}">
+                                Admin Dashboard
+                            </a>
+                        </li>
+
+                    {% else %}
+
+                        <li>
+                            <a href="{% url 'auctions:dashboard' %}">
+                                Dashboard Yangu
+                            </a>
+                        </li>
 
                     {% endif %}
 
+                {% endif %}
 
-                </ul>
+            </ul>
 
-
-            </div>
-
-
-            <!-- CONTACT -->
-
-            <div class="footer-col">
+        </div>
 
 
-                <h4>
-                    Wasiliana Nasi
-                </h4>
+        <div class="footer-col">
+
+            <h4>
+                Wasiliana Nasi
+            </h4>
+
+            <ul class="contact-info">
+
+                <li>
+                    <i class="fa-solid fa-phone"></i>
+
+                    <span>
+                        0744 665 918
+                    </span>
+                </li>
+
+                <li>
+                    <i class="fa-solid fa-envelope"></i>
+
+                    <span>
+                        freemindagency2023@gmail.com
+                    </span>
+                </li>
+
+                <li>
+                    <i class="fa-solid fa-location-dot"></i>
+
+                    <span>
+                        Dar es Salaam, Tanzania
+                    </span>
+                </li>
+
+            </ul>
+
+        </div>
 
 
-                <ul class="contact-info">
+        <div class="footer-col">
+
+            <h4>
+                Msaada
+            </h4>
+
+            <a
+                href="https://wa.me/255744665918"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn"
+                style="
+                    background: #22c55e;
+                    border-radius: 50px;
+                    padding: 8px 16px;
+                    font-size: 0.85rem;
+                ">
+
+                <i class="fa-brands fa-whatsapp"></i>
+
+                WhatsApp Chat
+
+            </a>
+
+        </div>
+
+    </div>
 
 
-                    <li>
+    <div class="footer-bottom">
 
-                        <i class="fa-solid fa-phone"></i>
+        <div class="footer-bottom-content">
 
-                        <span>
-                            0744 665 918
-                        </span>
+            <p>
+                © 2026 Freemind Auction Agency.
+                Haki zote zimehifadhiwa.
+            </p>
 
-                    </li>
+            <div class="social-icons">
 
+                <a
+                    href="https://facebook.com/freemindagency.tz"
+                    target="_blank"
+                    rel="noopener noreferrer">
 
-                    <li>
+                    <i class="fa-brands fa-facebook-f"></i>
 
-                        <i class="fa-solid fa-envelope"></i>
+                </a>
 
-                        <span>
-                            freemindagency2023@gmail.com
-                        </span>
+                <a
+                    href="https://instagram.com/freemindagency.tz"
+                    target="_blank"
+                    rel="noopener noreferrer">
 
-                    </li>
+                    <i class="fa-brands fa-instagram"></i>
 
-
-                    <li>
-
-                        <i class="fa-solid fa-location-dot"></i>
-
-                        <span>
-                            Dar es Salaam, Tanzania
-                        </span>
-
-                    </li>
-
-
-                </ul>
-
-
-            </div>
-
-
-            <!-- HELP -->
-
-            <div class="footer-col">
-
-
-                <h4>
-                    Msaada
-                </h4>
-
+                </a>
 
                 <a
                     href="https://wa.me/255744665918"
                     target="_blank"
-                    rel="noopener noreferrer"
-                    class="btn"
-                    style="
-                        background: #22c55e;
-                        border-radius: 50px;
-                        padding: 8px 16px;
-                        font-size: 0.85rem;
-                    "
-                >
+                    rel="noopener noreferrer">
 
                     <i class="fa-brands fa-whatsapp"></i>
 
-                    WhatsApp Chat
-
                 </a>
 
-
             </div>
-
 
         </div>
 
+    </div>
 
-        <!-- =====================================================
-             FOOTER BOTTOM
-        ===================================================== -->
-
-        <div class="footer-bottom">
-
-
-            <div class="footer-bottom-content">
-
-
-                <p>
-
-                    © 2026 Freemind Auction Agency.
-                    Haki zote zimehifadhiwa.
-
-                </p>
-
-
-                <div class="social-icons">
-
-
-                    <a
-                        href="https://facebook.com/freemindagency.tz"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-
-                        <i class="fa-brands fa-facebook-f"></i>
-
-                    </a>
-
-
-                    <a
-                        href="https://instagram.com/freemindagency.tz"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-
-                        <i class="fa-brands fa-instagram"></i>
-
-                    </a>
-
-
-                    <a
-                        href="https://wa.me/255744665918"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-
-                        <i class="fa-brands fa-whatsapp"></i>
-
-                    </a>
-
-
-                </div>
-
-
-            </div>
-
-
-        </div>
-
-
-    </footer>
-
+</footer>
 
 </body>
-
 </html>
