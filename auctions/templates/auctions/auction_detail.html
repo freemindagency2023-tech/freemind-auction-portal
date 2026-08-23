@@ -1,14 +1,27 @@
 {% extends 'auctions/base.html' %}
 
-{% block title %}{{ auction.title }} | Freemind Auction{% endblock %}
+{% block title %}
+{{ auction.title }} | Freemind Auction
+{% endblock %}
 
 {% block content %}
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+>
 
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
-      rel="stylesheet">
+<link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+>
+
+<link
+    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet"
+>
+
 
 <style>
 
@@ -16,10 +29,6 @@
         font-family: 'Plus Jakarta Sans', sans-serif !important;
         color: #0f172a;
     }
-
-    /* =====================================================
-       HERO
-    ===================================================== */
 
     .detail-hero {
         background: linear-gradient(
@@ -29,22 +38,22 @@
         );
 
         color: #ffffff;
+
         padding: 40px 30px;
+
         border-radius: 20px;
+
         margin-bottom: 35px;
 
         box-shadow:
-            0 10px 25px rgba(15, 23, 42, 0.12);
+            0 10px 25px rgba(15,23,42,0.12);
     }
 
     .detail-hero h1 {
         font-weight: 800 !important;
         font-size: 2.2rem !important;
         color: #ffffff !important;
-
         margin: 0 0 10px 0 !important;
-
-        letter-spacing: -0.5px;
     }
 
     .detail-hero p.desc {
@@ -52,7 +61,6 @@
         font-size: 1.05rem;
         font-weight: 500 !important;
         line-height: 1.6;
-
         margin-bottom: 20px;
         max-width: 800px;
     }
@@ -64,203 +72,132 @@
     }
 
     .meta-badge {
-        background: rgba(255,255,255,0.10);
+        background: rgba(255,255,255,0.1);
         border: 1px solid rgba(255,255,255,0.15);
-
         padding: 8px 16px;
-
         border-radius: 30px;
-
         font-size: 0.85rem;
         font-weight: 700;
-
         color: #e2e8f0;
-
         display: inline-flex;
         align-items: center;
         gap: 8px;
     }
 
-    /* =====================================================
-       SECTION
-    ===================================================== */
-
     .section-title {
         font-weight: 800 !important;
         font-size: 1.6rem !important;
-
         color: #0f172a !important;
-
-        letter-spacing: -0.4px;
-
         margin-bottom: 25px !important;
-
         display: flex;
         align-items: center;
-
         gap: 10px;
     }
 
-    /* =====================================================
-       GRID
-    ===================================================== */
-
     .auction-grid {
         display: grid;
-
         grid-template-columns:
-            repeat(
-                auto-fill,
-                minmax(320px, 1fr)
-            );
-
+            repeat(auto-fill, minmax(320px, 1fr));
         gap: 25px;
-
         margin-bottom: 35px;
     }
 
-    /* =====================================================
-       ITEM CARD
-    ===================================================== */
-
     .item-card {
         background: #ffffff;
-
         border: 1px solid #e2e8f0;
-
         border-radius: 16px;
-
         overflow: hidden;
-
         box-shadow:
             0 4px 15px rgba(0,0,0,0.03);
-
         transition: all 0.25s ease;
-
         display: flex;
         flex-direction: column;
     }
 
     .item-card:hover {
         transform: translateY(-5px);
-
         box-shadow:
             0 12px 25px rgba(0,0,0,0.08);
-
-        border-color: #cbd5e1;
     }
 
+
     /* =====================================================
-       SINGLE IMAGE
+       GALLERY
     ===================================================== */
 
-    .item-image-container {
+    .gallery-container {
         position: relative;
-
-        width: 100%;
-        height: 260px;
-
-        overflow: hidden;
-
         background: #f1f5f9;
     }
 
-    .item-image {
+    .main-image-container {
+        position: relative;
+        height: 300px;
         width: 100%;
-        height: 100%;
-
-        object-fit: cover;
-
-        display: block;
-
-        transition:
-            transform 0.3s ease;
+        overflow: hidden;
+        background: #f1f5f9;
     }
 
-    .item-card:hover .item-image {
+    .main-item-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+
+    .main-item-image:hover {
         transform: scale(1.03);
     }
 
-    /* =====================================================
-       IMAGE COUNT
-    ===================================================== */
+    .thumbnail-container {
+        display: flex;
+        gap: 8px;
+        padding: 10px;
+        background: #ffffff;
+        border-top: 1px solid #e2e8f0;
+        overflow-x: auto;
+    }
+
+    .thumbnail {
+        width: 65px;
+        height: 55px;
+        min-width: 65px;
+        object-fit: cover;
+        border-radius: 7px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        opacity: 0.7;
+        transition: all 0.2s ease;
+    }
+
+    .thumbnail:hover,
+    .thumbnail.active {
+        border-color: #0284c7;
+        opacity: 1;
+    }
 
     .image-counter {
         position: absolute;
-
-        bottom: 12px;
         left: 12px;
-
-        background:
-            rgba(15,23,42,0.82);
-
+        bottom: 12px;
+        background: rgba(15,23,42,0.82);
         color: #ffffff;
-
         padding: 6px 11px;
-
         border-radius: 20px;
-
         font-size: 0.75rem;
-
         font-weight: 800;
-
-        z-index: 2;
-    }
-
-    /* =====================================================
-       STATUS
-    ===================================================== */
-
-    .status-badge {
-        position: absolute;
-
-        top: 12px;
-        right: 12px;
-
-        background: #0284c7;
-
-        color: #ffffff;
-
-        font-weight: 800;
-
-        font-size: 0.75rem;
-
-        padding: 5px 12px;
-
-        border-radius: 20px;
-
-        letter-spacing: 0.5px;
-
-        box-shadow:
-            0 2px 8px rgba(0,0,0,0.15);
-
         z-index: 3;
     }
 
-    /* =====================================================
-       NO IMAGE
-    ===================================================== */
-
     .no-image-placeholder {
         height: 100%;
-
         display: flex;
-
         flex-direction: column;
-
         align-items: center;
-
         justify-content: center;
-
         gap: 8px;
-
-        background:
-            linear-gradient(
-                135deg,
-                #f8fafc 0%,
-                #e2e8f0 100%
-            );
-
         color: #64748b;
     }
 
@@ -269,13 +206,24 @@
         color: #0284c7;
     }
 
-    .no-image-placeholder span {
-        font-size: 0.85rem;
 
-        font-weight: 700;
+    /* =====================================================
+       STATUS
+    ===================================================== */
 
-        text-transform: uppercase;
+    .status-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: #0284c7;
+        color: #ffffff;
+        font-weight: 800;
+        font-size: 0.75rem;
+        padding: 6px 12px;
+        border-radius: 20px;
+        z-index: 5;
     }
+
 
     /* =====================================================
        CONTENT
@@ -283,39 +231,26 @@
 
     .card-content {
         padding: 22px;
-
         flex: 1;
-
         display: flex;
-
         flex-direction: column;
-
         justify-content: space-between;
     }
 
     .item-title {
         font-weight: 800 !important;
-
         font-size: 1.3rem !important;
-
         color: #0f172a !important;
-
         margin: 0 0 8px 0 !important;
-
-        line-height: 1.3;
     }
 
     .item-desc {
         color: #475569 !important;
-
         font-size: 0.9rem;
-
-        font-weight: 500 !important;
-
         line-height: 1.5;
-
         margin-bottom: 15px;
     }
+
 
     /* =====================================================
        TAGS
@@ -323,31 +258,20 @@
 
     .info-tags {
         display: flex;
-
         flex-wrap: wrap;
-
         gap: 8px;
-
         margin-bottom: 15px;
     }
 
     .info-tag {
         display: inline-flex;
-
         align-items: center;
-
         gap: 5px;
-
         background: #f1f5f9;
-
         color: #475569;
-
         font-size: 0.78rem;
-
         font-weight: 700;
-
         padding: 6px 10px;
-
         border-radius: 7px;
     }
 
@@ -361,10 +285,6 @@
         color: #0e7490;
     }
 
-    .condition-tag {
-        background: #f1f5f9;
-        color: #475569;
-    }
 
     /* =====================================================
        PRICE
@@ -372,62 +292,45 @@
 
     .prices-container {
         background: #f8fafc;
-
         border: 1px solid #f1f5f9;
-
         border-radius: 12px;
-
         padding: 14px;
-
         margin-bottom: 20px;
     }
 
     .price-row {
         display: flex;
-
         justify-content: space-between;
-
         align-items: center;
-
         margin-bottom: 8px;
-
         gap: 10px;
     }
 
     .price-row:last-child {
         margin-bottom: 0;
-
         padding-top: 8px;
-
-        border-top:
-            1px dashed #e2e8f0;
+        border-top: 1px dashed #e2e8f0;
     }
 
     .price-label {
         font-size: 0.75rem;
-
         font-weight: 800;
-
         color: #64748b;
-
         text-transform: uppercase;
     }
 
     .price-val {
         font-size: 0.95rem;
-
         font-weight: 800;
-
         color: #0f172a;
     }
 
     .highest-bid-val {
         font-size: 1.05rem;
-
         font-weight: 800;
-
         color: #0284c7;
     }
+
 
     /* =====================================================
        BUTTONS
@@ -435,25 +338,14 @@
 
     .btn-action {
         background: #0f172a;
-
         color: #ffffff !important;
-
         padding: 12px;
-
         border-radius: 10px;
-
         font-weight: 800 !important;
-
         font-size: 0.9rem;
-
         text-decoration: none;
-
         text-align: center;
-
         display: block;
-
-        transition:
-            background 0.2s ease;
     }
 
     .btn-action:hover {
@@ -470,34 +362,63 @@
 
     .btn-back {
         display: inline-flex;
-
         align-items: center;
-
         gap: 8px;
-
         background: #ffffff;
-
         color: #0f172a !important;
-
-        border:
-            1px solid #cbd5e1;
-
+        border: 1px solid #cbd5e1;
         padding: 10px 20px;
-
         border-radius: 10px;
-
         font-weight: 700 !important;
-
         text-decoration: none;
-
-        transition: all 0.2s ease;
     }
 
     .btn-back:hover {
         background: #f1f5f9;
-
-        border-color: #94a3b8;
     }
+
+
+    /* =====================================================
+       LIGHTBOX
+    ===================================================== */
+
+    .image-lightbox {
+        display: none;
+        position: fixed;
+        inset: 0;
+        z-index: 99999;
+        background: rgba(0,0,0,0.88);
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .image-lightbox.show {
+        display: flex;
+    }
+
+    .lightbox-image {
+        max-width: 95vw;
+        max-height: 90vh;
+        object-fit: contain;
+        border-radius: 10px;
+    }
+
+    .lightbox-close {
+        position: fixed;
+        top: 20px;
+        right: 25px;
+        color: #ffffff;
+        font-size: 2rem;
+        cursor: pointer;
+        background: rgba(255,255,255,0.12);
+        border: none;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        z-index: 100000;
+    }
+
 
     /* =====================================================
        EMPTY
@@ -505,18 +426,13 @@
 
     .empty-box {
         grid-column: 1 / -1;
-
         background: #ffffff;
-
-        border:
-            2px dashed #cbd5e1;
-
+        border: 2px dashed #cbd5e1;
         border-radius: 16px;
-
         padding: 40px 20px;
-
         text-align: center;
     }
+
 
     /* =====================================================
        MOBILE
@@ -536,13 +452,10 @@
             grid-template-columns: 1fr;
         }
 
-        .item-image-container {
-            height: 230px;
+        .main-image-container {
+            height: 250px;
         }
 
-        .price-row {
-            align-items: flex-start;
-        }
     }
 
 </style>
@@ -551,8 +464,8 @@
 <div class="detail-wrapper">
 
     <!-- =================================================
-         AUCTION HERO
-    ================================================= -->
+         AUCTION HEADER
+    ================================================== -->
 
     <div class="detail-hero">
 
@@ -577,8 +490,8 @@
 
                     <i
                         class="fa-solid fa-location-dot"
-                        style="color:#38bdf8;">
-                    </i>
+                        style="color:#38bdf8;"
+                    ></i>
 
                     {{ auction.location }}
 
@@ -593,8 +506,8 @@
 
                     <i
                         class="fa-solid fa-circle-info"
-                        style="color:#38bdf8;">
-                    </i>
+                        style="color:#38bdf8;"
+                    ></i>
 
                     {{ auction.status }}
 
@@ -609,8 +522,8 @@
 
                     <i
                         class="fa-solid fa-calendar"
-                        style="color:#38bdf8;">
-                    </i>
+                        style="color:#38bdf8;"
+                    ></i>
 
                     {{ auction.start_date|date:"d M Y H:i" }}
 
@@ -625,8 +538,8 @@
 
                     <i
                         class="fa-solid fa-calendar-check"
-                        style="color:#38bdf8;">
-                    </i>
+                        style="color:#38bdf8;"
+                    ></i>
 
                     {{ auction.end_date|date:"d M Y H:i" }}
 
@@ -640,24 +553,20 @@
 
 
     <!-- =================================================
-         ITEMS TITLE
-    ================================================= -->
+         ITEMS
+    ================================================== -->
 
     <h2 class="section-title">
 
         <i
             class="fa-solid fa-box-open"
-            style="color:#0284c7;">
-        </i>
+            style="color:#0284c7;"
+        ></i>
 
         Auction Items
 
     </h2>
 
-
-    <!-- =================================================
-         ITEMS
-    ================================================= -->
 
     <div class="auction-grid">
 
@@ -665,81 +574,154 @@
 
             <div class="item-card">
 
+
                 <!-- =====================================
-                     SINGLE COVER IMAGE
+                     IMAGE GALLERY
                 ====================================== -->
 
-                <div class="item-image-container">
+                <div class="gallery-container">
 
-                    <span class="status-badge">
+                    <div class="main-image-container">
 
-                        {% if item.is_sold %}
-                            Closed
-                        {% else %}
+                        <span class="status-badge">
+
                             {{ auction.status|default:"Auction" }}
+
+                        </span>
+
+
+                        {% if item.image %}
+
+                            <img
+                                id="main-image-{{ item.id }}"
+                                src="{{ item.image.url }}"
+                                alt="{{ item.name }}"
+                                class="main-item-image"
+                                onclick="openLightbox(this.src)"
+                            >
+
+                        {% else %}
+
+                            {% with gallery_images=item.images.all %}
+
+                                {% if gallery_images %}
+
+                                    <img
+                                        id="main-image-{{ item.id }}"
+                                        src="{{ gallery_images.0.image.url }}"
+                                        alt="{{ item.name }}"
+                                        class="main-item-image"
+                                        onclick="openLightbox(this.src)"
+                                    >
+
+                                {% else %}
+
+                                    <div class="no-image-placeholder">
+
+                                        <i class="fa-solid fa-box"></i>
+
+                                        <span>
+                                            No Image Available
+                                        </span>
+
+                                    </div>
+
+                                {% endif %}
+
+                            {% endwith %}
+
                         {% endif %}
 
-                    </span>
+
+                        <!-- IMAGE COUNTER -->
+
+                        {% with gallery_images=item.images.all %}
+
+                            {% if item.image and gallery_images %}
+
+                                <span class="image-counter">
+
+                                    <i class="fa-solid fa-images"></i>
+
+                                    {{ gallery_images|length|add:"1" }}
+                                    picha
+
+                                </span>
+
+                            {% elif gallery_images %}
+
+                                <span class="image-counter">
+
+                                    <i class="fa-solid fa-images"></i>
+
+                                    {{ gallery_images|length }}
+                                    picha
+
+                                </span>
+
+                            {% elif item.image %}
+
+                                <span class="image-counter">
+
+                                    <i class="fa-solid fa-image"></i>
+
+                                    1 picha
+
+                                </span>
+
+                            {% endif %}
+
+                        {% endwith %}
+
+                    </div>
 
 
-                    {% if item.image %}
-
-                        <img
-                            src="{{ item.image.url }}"
-                            alt="{{ item.name }}"
-                            class="item-image"
-                        >
-
-                    {% elif item.images.first %}
-
-                        <img
-                            src="{{ item.images.first.image.url }}"
-                            alt="{{ item.name }}"
-                            class="item-image"
-                        >
-
-                    {% else %}
-
-                        <div class="no-image-placeholder">
-
-                            <i class="fa-solid fa-box"></i>
-
-                            <span>
-                                No Image Available
-                            </span>
-
-                        </div>
-
-                    {% endif %}
-
-
-                    <!-- IMAGE COUNT -->
+                    <!-- =====================================
+                         THUMBNAILS
+                    ====================================== -->
 
                     {% with gallery_images=item.images.all %}
 
-                        {% if item.image and gallery_images %}
+                        {% if item.image or gallery_images %}
 
-                            <span class="image-counter">
+                            <div class="thumbnail-container">
 
-                                <i class="fa-solid fa-images"></i>
 
-                                {{ gallery_images|length|add:"1" }}
+                                {% if item.image %}
 
-                                picha
+                                    <img
+                                        src="{{ item.image.url }}"
+                                        alt="{{ item.name }}"
+                                        class="thumbnail active"
+                                        onclick="changeMainImage(
+                                            'main-image-{{ item.id }}',
+                                            this.src,
+                                            this
+                                        )"
+                                    >
 
-                            </span>
+                                {% endif %}
 
-                        {% elif gallery_images %}
 
-                            <span class="image-counter">
+                                {% for gallery_image in gallery_images %}
 
-                                <i class="fa-solid fa-images"></i>
+                                    <img
+                                        src="{{ gallery_image.image.url }}"
+                                        alt="{{ gallery_image.caption|default:item.name }}"
+                                        class="thumbnail
+                                        {% if not item.image and forloop.first %}
+                                            active
+                                        {% endif %}"
+                                        onclick="changeMainImage(
+                                            'main-image-{{ item.id }}',
+                                            this.src,
+                                            this
+                                        )"
+                                    >
 
-                                {{ gallery_images|length }}
+                                {% endfor %}
 
-                                picha
-
-                            </span>
+                            </div>
 
                         {% endif %}
 
@@ -749,7 +731,7 @@
 
 
                 <!-- =====================================
-                     CONTENT
+                     ITEM CONTENT
                 ====================================== -->
 
                 <div class="card-content">
@@ -764,7 +746,7 @@
                         {% if item.description %}
 
                             <p class="item-desc">
-                                {{ item.description|truncatechars:120 }}
+                                {{ item.description }}
                             </p>
 
                         {% endif %}
@@ -778,6 +760,7 @@
 
                                     <i class="fa-solid fa-layer-group"></i>
 
+                                    Category:
                                     {{ item.category.name }}
 
                                 </span>
@@ -791,6 +774,7 @@
 
                                     <i class="fa-solid fa-tags"></i>
 
+                                    Subcategory:
                                     {{ item.subcategory.name }}
 
                                 </span>
@@ -800,10 +784,11 @@
 
                             {% if item.condition %}
 
-                                <span class="info-tag condition-tag">
+                                <span class="info-tag">
 
                                     <i class="fa-solid fa-circle-check"></i>
 
+                                    Condition:
                                     {{ item.condition }}
 
                                 </span>
@@ -861,10 +846,7 @@
 
                                         <span
                                             class="price-val"
-                                            style="
-                                                color:#64748b;
-                                                font-size:0.85rem;
-                                            "
+                                            style="color:#64748b;"
                                         >
 
                                             No bids yet
@@ -881,7 +863,7 @@
 
 
                         <!-- =================================
-                             VIEW ITEM / BID
+                             BID BUTTON
                         ================================== -->
 
                         {% if item.is_sold %}
@@ -891,7 +873,6 @@
                                 style="
                                     background:#64748b;
                                     cursor:not-allowed;
-                                    margin-bottom:10px;
                                 "
                             >
 
@@ -901,64 +882,39 @@
 
                             </div>
 
-                        {% endif %}
+
+                        {% elif user.is_authenticated %}
+
+                            <a
+                                href="{% url 'place_bid' item.id %}"
+                                class="btn-action"
+                            >
+
+                                Place Bid
+
+                                <i
+                                    class="fa-solid fa-gavel"
+                                    style="margin-left:5px;"
+                                ></i>
+
+                            </a>
 
 
-                        <!-- VIEW ITEM -->
+                        {% else %}
 
-                        <a
-                            href="{% url 'item_detail' item.id %}"
-                            class="btn-action"
-                            style="margin-bottom:10px;"
-                        >
+                            <a
+                                href="{% url 'login' %}"
+                                class="btn-action btn-login"
+                            >
 
-                            View Item
+                                Login to Place Bid
 
-                            <i
-                                class="fa-solid fa-arrow-right"
-                                style="margin-left:5px;"
-                            ></i>
+                                <i
+                                    class="fa-solid fa-right-to-bracket"
+                                    style="margin-left:5px;"
+                                ></i>
 
-                        </a>
-
-
-                        <!-- BID -->
-
-                        {% if not item.is_sold %}
-
-                            {% if user.is_authenticated %}
-
-                                <a
-                                    href="{% url 'place_bid' item.id %}"
-                                    class="btn-action"
-                                >
-
-                                    Place Bid
-
-                                    <i
-                                        class="fa-solid fa-gavel"
-                                        style="margin-left:5px;"
-                                    ></i>
-
-                                </a>
-
-                            {% else %}
-
-                                <a
-                                    href="{% url 'login' %}"
-                                    class="btn-action btn-login"
-                                >
-
-                                    Login to Place Bid
-
-                                    <i
-                                        class="fa-solid fa-right-to-bracket"
-                                        style="margin-left:5px;"
-                                    ></i>
-
-                                </a>
-
-                            {% endif %}
+                            </a>
 
                         {% endif %}
 
@@ -967,6 +923,7 @@
                 </div>
 
             </div>
+
 
         {% empty %}
 
@@ -977,33 +934,16 @@
                     style="
                         font-size:2.5rem;
                         color:#94a3b8;
-                        margin-bottom:12px;
                     "
                 ></i>
 
-                <h3
-                    style="
-                        margin:0 0 6px 0;
-                        font-weight:800;
-                        color:#0f172a;
-                    "
-                >
-
+                <h3>
                     No Items Found
-
                 </h3>
 
-                <p
-                    style="
-                        margin:0;
-                        color:#64748b;
-                        font-weight:600;
-                    "
-                >
-
+                <p>
                     There are currently no items
                     added in this auction.
-
                 </p>
 
             </div>
@@ -1029,5 +969,162 @@
     </a>
 
 </div>
+
+
+<!-- =====================================================
+     LIGHTBOX
+====================================================== -->
+
+<div
+    id="image-lightbox"
+    class="image-lightbox"
+    onclick="closeLightbox(event)"
+>
+
+    <button
+        type="button"
+        class="lightbox-close"
+        onclick="closeLightbox(event)"
+    >
+
+        <i class="fa-solid fa-xmark"></i>
+
+    </button>
+
+
+    <img
+        id="lightbox-image"
+        src=""
+        alt="Auction Item"
+        class="lightbox-image"
+    >
+
+</div>
+
+
+<script>
+
+    function changeMainImage(
+        imageId,
+        imageUrl,
+        thumbnail
+    ) {
+
+        const mainImage =
+            document.getElementById(imageId);
+
+        if (!mainImage) {
+            return;
+        }
+
+        mainImage.src = imageUrl;
+
+
+        const thumbnails =
+            thumbnail
+            .parentElement
+            .querySelectorAll('.thumbnail');
+
+
+        thumbnails.forEach(function(item) {
+
+            item.classList.remove('active');
+
+        });
+
+
+        thumbnail.classList.add('active');
+    }
+
+
+    function openLightbox(imageUrl) {
+
+        const lightbox =
+            document.getElementById(
+                'image-lightbox'
+            );
+
+        const lightboxImage =
+            document.getElementById(
+                'lightbox-image'
+            );
+
+
+        if (!lightbox || !lightboxImage) {
+            return;
+        }
+
+
+        lightboxImage.src = imageUrl;
+
+        lightbox.classList.add('show');
+
+        document.body.style.overflow = 'hidden';
+    }
+
+
+    function closeLightbox(event) {
+
+        if (event) {
+
+            if (
+                event.target.id !== 'image-lightbox' &&
+                !event.target.closest(
+                    '.lightbox-close'
+                )
+            ) {
+
+                return;
+
+            }
+
+        }
+
+
+        const lightbox =
+            document.getElementById(
+                'image-lightbox'
+            );
+
+
+        if (!lightbox) {
+            return;
+        }
+
+
+        lightbox.classList.remove('show');
+
+        document.body.style.overflow = '';
+    }
+
+
+    document.addEventListener(
+        'keydown',
+        function(event) {
+
+            if (event.key === 'Escape') {
+
+                const lightbox =
+                    document.getElementById(
+                        'image-lightbox'
+                    );
+
+
+                if (lightbox) {
+
+                    lightbox.classList.remove(
+                        'show'
+                    );
+
+                    document.body.style.overflow = '';
+
+                }
+
+            }
+
+        }
+    );
+
+</script>
 
 {% endblock %}

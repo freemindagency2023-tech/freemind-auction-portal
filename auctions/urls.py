@@ -1,185 +1,149 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
-
 from . import views
+
+
+app_name = "auctions"
 
 
 urlpatterns = [
 
     # =====================================================
-    # HOME
+    # HOME / AUCTIONS
     # =====================================================
 
     path(
-        '',
-        views.home,
-        name='home'
-    ),
-
-    # =====================================================
-    # AUCTIONS
-    # =====================================================
-
-    path(
-        'auctions/',
+        "",
         views.auction_list,
-        name='auction_list'
+        name="auction_list",
     ),
 
     path(
-        'auctions/<int:auction_id>/',
+        "auctions/",
+        views.auction_list,
+        name="auction_list_page",
+    ),
+
+    path(
+        "auctions/<int:auction_id>/",
         views.auction_detail,
-        name='auction_detail'
+        name="auction_detail",
     ),
 
+
     # =====================================================
-    # ADMIN / ITEM
+    # USER DASHBOARD
     # =====================================================
 
     path(
-        'admin-dashboard/add-item/',
-        views.add_item,
-        name='add_item'
-    ),
-
-    # =====================================================
-    # DASHBOARD
-    # =====================================================
-
-    path(
-        'dashboard/',
+        "dashboard/",
         views.dashboard,
-        name='dashboard'
+        name="dashboard",
     ),
 
     path(
-        'dashboard-redirect/',
+        "dashboard/redirect/",
         views.dashboard_redirect,
-        name='dashboard_redirect'
+        name="dashboard_redirect",
     ),
 
+
+    # =====================================================
+    # ADMIN DASHBOARD
+    # =====================================================
+
     path(
-        'admin-dashboard/',
+        "admin-dashboard/",
         views.admin_dashboard,
-        name='admin_dashboard'
-    ),
-
-    # =====================================================
-    # BIDDING
-    # =====================================================
-
-    path(
-        'item/<int:item_id>/bid/',
-        views.place_bid,
-        name='place_bid'
+        name="admin_dashboard",
     ),
 
     path(
-        'item/<int:item_id>/close/',
+        "add-item/",
+        views.add_item,
+        name="add_item",
+    ),
+
+    path(
+        "item/<int:item_id>/close/",
         views.close_bidding,
-        name='close_bidding'
+        name="close_bidding",
     ),
 
+
+    # =====================================================
+    # ITEM DETAIL
+    # =====================================================
+
     path(
-        'bid/<int:bid_id>/edit/',
+        "item/<int:item_id>/",
+        views.item_detail,
+        name="item_detail",
+    ),
+
+
+    # =====================================================
+    # PLACE BID
+    # =====================================================
+
+    path(
+        "item/<int:item_id>/bid/",
+        views.place_bid,
+        name="place_bid",
+    ),
+
+
+    # =====================================================
+    # EDIT / DELETE BID
+    # =====================================================
+
+    path(
+        "bid/<int:bid_id>/edit/",
         views.edit_bid,
-        name='edit_bid'
+        name="edit_bid",
     ),
 
     path(
-        'bid/<int:bid_id>/delete/',
+        "bid/<int:bid_id>/delete/",
         views.delete_bid,
-        name='delete_bid'
+        name="delete_bid",
     ),
 
+
     # =====================================================
-    # LOGIN
+    # CATEGORY
     # =====================================================
 
     path(
-        'accounts/login/',
-        views.CustomLoginView.as_view(),
-        name='login'
+        "category/<int:category_id>/",
+        views.category_detail,
+        name="category_detail",
     ),
 
-    # =====================================================
-    # LOGOUT
-    # =====================================================
-
-    path(
-        'accounts/logout/',
-        auth_views.LogoutView.as_view(),
-        name='logout'
-    ),
 
     # =====================================================
-    # REGISTER
+    # SUBCATEGORY
     # =====================================================
 
     path(
-        'accounts/register/',
-        views.register,
-        name='register'
+        "subcategory/<int:subcategory_id>/",
+        views.subcategory_detail,
+        name="subcategory_detail",
     ),
 
-    # =====================================================
-    # PASSWORD CHANGE
-    # =====================================================
-
-    path(
-        'password-change/',
-        auth_views.PasswordChangeView.as_view(
-            template_name='auctions/password_change.html',
-            success_url='/password-change/done/'
-        ),
-        name='password_change'
-    ),
-
-    path(
-        'password-change/done/',
-        auth_views.PasswordChangeDoneView.as_view(
-            template_name='auctions/password_change_done.html'
-        ),
-        name='password_change_done'
-    ),
 
     # =====================================================
-    # PASSWORD RESET
+    # ANNOUNCEMENTS
     # =====================================================
 
     path(
-        'password-reset/',
-        auth_views.PasswordResetView.as_view(
-            template_name='registration/password_reset_form.html',
-            email_template_name='registration/password_reset_email.html',
-            subject_template_name='registration/password_reset_subject.txt',
-            success_url='/password-reset/done/'
-        ),
-        name='password_reset'
+        "announcements/",
+        views.announcements,
+        name="announcements",
     ),
 
     path(
-        'password-reset/done/',
-        auth_views.PasswordResetDoneView.as_view(
-            template_name='registration/password_reset_done.html'
-        ),
-        name='password_reset_done'
-    ),
-
-    path(
-        'password-reset-confirm/<uidb64>/<token>/',
-        auth_views.PasswordResetConfirmView.as_view(
-            template_name='registration/password_reset_confirm.html',
-            success_url='/password-reset-complete/'
-        ),
-        name='password_reset_confirm'
-    ),
-
-    path(
-        'password-reset-complete/',
-        auth_views.PasswordResetCompleteView.as_view(
-            template_name='registration/password_reset_complete.html'
-        ),
-        name='password_reset_complete'
+        "announcements/<int:announcement_id>/",
+        views.announcement_detail,
+        name="announcement_detail",
     ),
 ]
