@@ -138,13 +138,13 @@
             {{ form.non_field_errors }}
 
             <p>
-                {{ form.email.label_tag }}
-                {{ form.email }}
-                {{ form.email.errors }}
+                <label for="id_username">Username / Email:</label>
+                {{ form.username }}
+                {{ form.username.errors }}
             </p>
 
             <p>
-                {{ form.password.label_tag }}
+                <label for="id_password">Password:</label>
                 {{ form.password }}
                 {{ form.password.errors }}
             </p>
@@ -162,7 +162,9 @@
 
         <div class="register-link">
             Huna akaunti?
-            <span style="color: #64748b; font-weight: 600;">Wasiliana na Msimamizi</span>
+            <a href="{% url 'auctions:register' %}">
+                Jisajili Hapa
+            </a>
         </div>
 
     </div>
