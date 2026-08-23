@@ -9,24 +9,29 @@
         {% block title %}Freemind Auction Agency{% endblock %}
     </title>
 
-    <!-- Google Font & FontAwesome Icons -->
+    <!-- Google Font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
-          rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet"
+    >
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <!-- Font Awesome -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    >
 
     <style>
 
-        /* ================================
-           DESIGN SYSTEM & VARIABLES
-        ================================= */
+        /* =====================================================
+           DESIGN SYSTEM
+        ===================================================== */
 
         :root {
+
             --bg-main: #f8fafc;
             --bg-card: #ffffff;
             --bg-nav: rgba(255, 255, 255, 0.95);
@@ -46,6 +51,10 @@
         }
 
 
+        /* =====================================================
+           RESET
+        ===================================================== */
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -59,6 +68,7 @@
 
 
         body {
+
             min-height: 100vh;
 
             font-family:
@@ -78,9 +88,9 @@
         }
 
 
-        /* ================================================
+        /* =====================================================
            TYPOGRAPHY
-        ================================================ */
+        ===================================================== */
 
         h1,
         h2,
@@ -105,13 +115,16 @@
             font-size: 2rem;
         }
 
+
         h2 {
             font-size: 1.5rem;
         }
 
+
         h3 {
             font-size: 1.2rem;
         }
+
 
         h4 {
             font-size: 1rem;
@@ -141,9 +154,9 @@
         }
 
 
-        /* ================================
+        /* =====================================================
            BUTTONS
-        ================================= */
+        ===================================================== */
 
         .btn {
 
@@ -182,6 +195,8 @@
             background: #b71c1c;
 
             transform: translateY(-2px);
+
+            color: #ffffff;
         }
 
 
@@ -198,12 +213,14 @@
         .btn-outline:hover {
 
             background: #f1f5f9;
+
+            color: var(--text-main);
         }
 
 
-        /* ================================
+        /* =====================================================
            LOGOUT
-        ================================= */
+        ===================================================== */
 
         .logout-form {
 
@@ -255,9 +272,9 @@
         }
 
 
-        /* ================================
-           NAVIGATION BAR
-        ================================= */
+        /* =====================================================
+           NAVIGATION
+        ===================================================== */
 
         nav {
 
@@ -354,9 +371,9 @@
         }
 
 
-        /* ================================
+        /* =====================================================
            MAIN CONTAINER
-        ================================= */
+        ===================================================== */
 
         .container {
 
@@ -372,9 +389,29 @@
         }
 
 
-        /* ================================
+        /* =====================================================
+           MESSAGES
+        ===================================================== */
+
+        .message {
+
+            padding: 12px 18px;
+
+            background: #e0f2fe;
+
+            border: 1px solid #bae6fd;
+
+            border-radius: 8px;
+
+            color: #0369a1;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* =====================================================
            FOOTER
-        ================================= */
+        ===================================================== */
 
         footer {
 
@@ -578,9 +615,9 @@
         }
 
 
-        /* ================================
+        /* =====================================================
            MOBILE
-        ================================= */
+        ===================================================== */
 
         @media (max-width: 768px) {
 
@@ -608,6 +645,14 @@
 
                 grid-template-columns: 1fr;
             }
+
+
+            .container {
+
+                width: 94%;
+
+                padding-top: 20px;
+            }
         }
 
     </style>
@@ -618,21 +663,24 @@
 <body>
 
 
-    <!-- =================================================
+    <!-- =====================================================
          NAVIGATION BAR
-    ================================================== -->
+    ===================================================== -->
 
     <nav>
 
 
         <!-- LOGO -->
 
-        <a class="logo" href="{% url 'auctions:auction_list' %}">
+        <a
+            class="logo"
+            href="{% url 'auctions:auction_list' %}"
+        >
 
             <i
                 class="fa-solid fa-gavel"
-                style="color: var(--primary-red);">
-            </i>
+                style="color: var(--primary-red);"
+            ></i>
 
             FREEMIND
 
@@ -672,14 +720,17 @@
 
 
                 <!-- =================================================
-                     ADMIN / USER DASHBOARD
+                     USER / ADMIN DASHBOARD
                 ================================================== -->
 
                 {% if user.is_staff or user.is_superuser %}
 
-                    <!-- ADMIN DASHBOARD -->
 
-                    <a href="{% url 'auctions:admin_dashboard' %}">
+                    <!-- ADMIN -->
+
+                    <a
+                        href="{% url 'auctions:admin_dashboard' %}"
+                    >
 
                         <i class="fa-solid fa-gauge-high"></i>
 
@@ -687,11 +738,15 @@
 
                     </a>
 
+
                 {% else %}
 
-                    <!-- NORMAL USER DASHBOARD -->
 
-                    <a href="{% url 'auctions:dashboard' %}">
+                    <!-- NORMAL USER -->
+
+                    <a
+                        href="{% url 'auctions:dashboard' %}"
+                    >
 
                         <i class="fa-solid fa-chart-line"></i>
 
@@ -699,21 +754,30 @@
 
                     </a>
 
+
                 {% endif %}
 
 
-                <!-- LOGOUT -->
+                <!-- =================================================
+                     LOGOUT
+                     
+                     IMPORTANT:
+                     Project urls.py ina:
+                     name="logout"
+                ================================================== -->
 
                 <form
                     action="{% url 'logout' %}"
                     method="post"
-                    class="logout-form">
+                    class="logout-form"
+                >
 
                     {% csrf_token %}
 
                     <button
                         type="submit"
-                        class="logout-btn">
+                        class="logout-btn"
+                    >
 
                         <i class="fa-solid fa-right-from-bracket"></i>
 
@@ -727,14 +791,21 @@
             {% else %}
 
 
-                <!-- LOGIN / REGISTER -->
+                <!-- =================================================
+                     LOGIN / REGISTER
+                ================================================== -->
 
                 <div class="nav-auth">
 
+
                     <a
-                        href="/accounts/login/"
+                        href="{% url 'login' %}"
                         class="btn btn-outline"
-                        style="padding: 6px 14px; font-size: 0.85rem;">
+                        style="
+                            padding: 6px 14px;
+                            font-size: 0.85rem;
+                        "
+                    >
 
                         Login
 
@@ -742,13 +813,18 @@
 
 
                     <a
-                        href="/accounts/register/"
+                        href="{% url 'register' %}"
                         class="btn"
-                        style="padding: 6px 14px; font-size: 0.85rem;">
+                        style="
+                            padding: 6px 14px;
+                            font-size: 0.85rem;
+                        "
+                    >
 
                         Register
 
                     </a>
+
 
                 </div>
 
@@ -761,10 +837,9 @@
     </nav>
 
 
-
-    <!-- =================================================
+    <!-- =====================================================
          MAIN CONTENT
-    ================================================== -->
+    ===================================================== -->
 
     <main class="container">
 
@@ -773,16 +848,7 @@
 
             {% for message in messages %}
 
-                <div
-                    class="message"
-                    style="
-                        padding: 12px 18px;
-                        background: #e0f2fe;
-                        border: 1px solid #bae6fd;
-                        border-radius: 8px;
-                        color: #0369a1;
-                        margin-bottom: 20px;
-                    ">
+                <div class="message">
 
                     <i class="fa-solid fa-circle-info"></i>
 
@@ -797,10 +863,7 @@
         {% endif %}
 
 
-
         {% block content %}
-
-        <!-- Content kutoka kwenye pages zingine zitaingia hapa -->
 
         {% endblock %}
 
@@ -808,10 +871,9 @@
     </main>
 
 
-
-    <!-- =================================================
-         FOOTER SECTION
-    ================================================== -->
+    <!-- =====================================================
+         FOOTER
+    ===================================================== -->
 
     <footer>
 
@@ -823,18 +885,20 @@
 
             <div class="footer-col">
 
+
                 <a
                     class="logo"
                     href="{% url 'auctions:auction_list' %}"
                     style="
                         color: #ffffff !important;
                         margin-bottom: 14px;
-                    ">
+                    "
+                >
 
                     <i
                         class="fa-solid fa-gavel"
-                        style="color: var(--primary-red);">
-                    </i>
+                        style="color: var(--primary-red);"
+                    ></i>
 
                     FREEMIND
 
@@ -846,17 +910,20 @@
 
 
                 <p>
+
                     Freemind Auction Agency ni dalali na wakala
                     wa minada wa kitaalamu kwa uwazi na ufanisi.
+
                 </p>
 
-            </div>
 
+            </div>
 
 
             <!-- QUICK LINKS -->
 
             <div class="footer-col">
+
 
                 <h4>
                     Kurasa za Haraka
@@ -865,27 +932,44 @@
 
                 <ul class="footer-links">
 
+
                     <li>
-                        <a href="{% url 'auctions:auction_list' %}">
+
+                        <a
+                            href="{% url 'auctions:auction_list' %}"
+                        >
+
                             Nyumbani (Home)
+
                         </a>
+
                     </li>
 
 
                     <li>
-                        <a href="{% url 'auctions:auction_list' %}">
+
+                        <a
+                            href="{% url 'auctions:auction_list' %}"
+                        >
+
                             Orodha ya Minada
+
                         </a>
+
                     </li>
 
 
                     {% if user.is_authenticated %}
 
+
                         {% if user.is_staff or user.is_superuser %}
+
 
                             <li>
 
-                                <a href="{% url 'auctions:admin_dashboard' %}">
+                                <a
+                                    href="{% url 'auctions:admin_dashboard' %}"
+                                >
 
                                     Admin Dashboard
 
@@ -893,11 +977,15 @@
 
                             </li>
 
+
                         {% else %}
+
 
                             <li>
 
-                                <a href="{% url 'auctions:dashboard' %}">
+                                <a
+                                    href="{% url 'auctions:dashboard' %}"
+                                >
 
                                     Dashboard Yangu
 
@@ -905,19 +993,23 @@
 
                             </li>
 
+
                         {% endif %}
+
 
                     {% endif %}
 
+
                 </ul>
 
-            </div>
 
+            </div>
 
 
             <!-- CONTACT -->
 
             <div class="footer-col">
+
 
                 <h4>
                     Wasiliana Nasi
@@ -925,6 +1017,7 @@
 
 
                 <ul class="contact-info">
+
 
                     <li>
 
@@ -958,15 +1051,17 @@
 
                     </li>
 
+
                 </ul>
 
-            </div>
 
+            </div>
 
 
             <!-- HELP -->
 
             <div class="footer-col">
+
 
                 <h4>
                     Msaada
@@ -976,13 +1071,15 @@
                 <a
                     href="https://wa.me/255744665918"
                     target="_blank"
+                    rel="noopener noreferrer"
                     class="btn"
                     style="
                         background: #22c55e;
                         border-radius: 50px;
                         padding: 8px 16px;
                         font-size: 0.85rem;
-                    ">
+                    "
+                >
 
                     <i class="fa-brands fa-whatsapp"></i>
 
@@ -990,14 +1087,16 @@
 
                 </a>
 
+
             </div>
 
 
         </div>
 
 
-
-        <!-- FOOTER BOTTOM -->
+        <!-- =====================================================
+             FOOTER BOTTOM
+        ===================================================== -->
 
         <div class="footer-bottom">
 
@@ -1006,8 +1105,10 @@
 
 
                 <p>
+
                     © 2026 Freemind Auction Agency.
                     Haki zote zimehifadhiwa.
+
                 </p>
 
 
@@ -1016,7 +1117,9 @@
 
                     <a
                         href="https://facebook.com/freemindagency.tz"
-                        target="_blank">
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
 
                         <i class="fa-brands fa-facebook-f"></i>
 
@@ -1025,7 +1128,9 @@
 
                     <a
                         href="https://instagram.com/freemindagency.tz"
-                        target="_blank">
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
 
                         <i class="fa-brands fa-instagram"></i>
 
@@ -1034,7 +1139,9 @@
 
                     <a
                         href="https://wa.me/255744665918"
-                        target="_blank">
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
 
                         <i class="fa-brands fa-whatsapp"></i>
 
@@ -1045,6 +1152,7 @@
 
 
             </div>
+
 
         </div>
 
