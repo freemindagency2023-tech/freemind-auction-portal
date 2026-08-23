@@ -6,206 +6,500 @@ Freemind Admin Dashboard
 
 {% block content %}
 
-<!-- Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+>
+
 
 <div class="max-w-7xl mx-auto px-4 py-8">
 
-    <!-- Hero Section -->
+
+    <!-- HERO -->
+
     <div class="bg-gradient-to-r from-slate-900 to-indigo-950 text-white rounded-2xl p-8 mb-8 shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+
         <div>
-            <span class="bg-indigo-500/20 text-indigo-300 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-indigo-500/30">Msimamizi Mkuu</span>
-            <h1 class="text-3xl font-extrabold mt-2 tracking-tight">Admin Dashboard</h1>
+
+            <span class="bg-indigo-500/20 text-indigo-300 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-indigo-500/30">
+                Msimamizi Mkuu
+            </span>
+
+            <h1 class="text-3xl font-extrabold mt-2 tracking-tight text-white">
+                Admin Dashboard
+            </h1>
+
             <p class="text-slate-300 mt-1">
-                Karibu tena, <span class="text-white font-semibold">{{ user.username }}</span>. Simamia Freemind Auction Agency kutoka hapa.
+                Karibu tena,
+                <span class="text-white font-semibold">
+                    {{ user.username }}
+                </span>.
+                Simamia Freemind Auction Agency kutoka hapa.
             </p>
+
         </div>
-        <div>
-            <a href="{% url 'home' %}" class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-all border border-white/10">
-                <i class="fa-solid fa-arrow-left"></i> Rudi Nyumbani
-            </a>
-        </div>
+
+
+        <a
+            href="{% url 'auctions:auction_list' %}"
+            class="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-all border border-white/10"
+        >
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Rudi Nyumbani
+
+        </a>
+
     </div>
 
-    <!-- Auction Grid Stats -->
+
+    <!-- STATISTICS -->
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 
+
         <!-- AUCTIONS -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow flex flex-col justify-between">
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-gavel"></i>
-                    </div>
-                    <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">Jumla</span>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+
+            <div class="flex items-center justify-between mb-4">
+
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-xl">
+
+                    <i class="fa-solid fa-gavel"></i>
+
                 </div>
-                <h2 class="text-3xl font-bold text-slate-800">{{ auctions.count }}</h2>
-                <h3 class="text-slate-500 font-medium text-sm mt-1">Auctions</h3>
+
+                <span class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-full">
+                    Jumla
+                </span>
+
             </div>
+
+            <h2 class="text-3xl font-bold text-slate-800">
+                {{ auctions.count }}
+            </h2>
+
+            <h3 class="text-slate-500 font-medium text-sm mt-1">
+                Auctions
+            </h3>
+
             <div class="mt-6 pt-4 border-t border-slate-100">
-                <a href="/admin/auctions/auction/" class="inline-flex items-center gap-2 text-indigo-600 hover:text-indigo-800 text-sm font-semibold transition-colors">
-                    Simamia Auctions <i class="fa-solid fa-arrow-right text-xs"></i>
+
+                <a
+                    href="/admin/auctions/auction/"
+                    class="text-indigo-600 text-sm font-semibold"
+                >
+                    Simamia Auctions
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
                 </a>
+
             </div>
+
         </div>
+
 
         <!-- ITEMS -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow flex flex-col justify-between">
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-box-open"></i>
-                    </div>
-                    <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">Bidhaa</span>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+
+            <div class="flex items-center justify-between mb-4">
+
+                <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl">
+
+                    <i class="fa-solid fa-box-open"></i>
+
                 </div>
-                <h2 class="text-3xl font-bold text-slate-800">{{ items.count }}</h2>
-                <h3 class="text-slate-500 font-medium text-sm mt-1">Items</h3>
+
+                <span class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+                    Bidhaa
+                </span>
+
             </div>
+
+            <h2 class="text-3xl font-bold text-slate-800">
+                {{ items.count }}
+            </h2>
+
+            <h3 class="text-slate-500 font-medium text-sm mt-1">
+                Items
+            </h3>
+
             <div class="mt-6 pt-4 border-t border-slate-100">
-                <a href="/admin/auctions/item/" class="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-800 text-sm font-semibold transition-colors">
-                    Simamia Items <i class="fa-solid fa-arrow-right text-xs"></i>
+
+                <a
+                    href="/admin/auctions/item/"
+                    class="text-emerald-600 text-sm font-semibold"
+                >
+                    Simamia Items
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
                 </a>
+
             </div>
+
         </div>
+
 
         <!-- BIDS -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow flex flex-col justify-between">
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-hand-holding-dollar"></i>
-                    </div>
-                    <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">Ofa</span>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+
+            <div class="flex items-center justify-between mb-4">
+
+                <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center text-xl">
+
+                    <i class="fa-solid fa-hand-holding-dollar"></i>
+
                 </div>
-                <h2 class="text-3xl font-bold text-slate-800">{{ bids.count }}</h2>
-                <h3 class="text-slate-500 font-medium text-sm mt-1">Bids</h3>
+
+                <span class="text-xs font-bold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
+                    Ofa
+                </span>
+
             </div>
+
+            <h2 class="text-3xl font-bold text-slate-800">
+                {{ bids.count }}
+            </h2>
+
+            <h3 class="text-slate-500 font-medium text-sm mt-1">
+                Bids
+            </h3>
+
             <div class="mt-6 pt-4 border-t border-slate-100">
-                <a href="/admin/auctions/bid/" class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 text-sm font-semibold transition-colors">
-                    Ona Bids <i class="fa-solid fa-arrow-right text-xs"></i>
+
+                <a
+                    href="/admin/auctions/bid/"
+                    class="text-blue-600 text-sm font-semibold"
+                >
+                    Ona Bids
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
                 </a>
+
             </div>
+
         </div>
+
 
         <!-- ANNOUNCEMENTS -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-md transition-shadow flex flex-col justify-between">
-            <div>
-                <div class="flex items-center justify-between mb-4">
-                    <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl">
-                        <i class="fa-solid fa-bullhorn"></i>
-                    </div>
-                    <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">Taarifa</span>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+
+            <div class="flex items-center justify-between mb-4">
+
+                <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl">
+
+                    <i class="fa-solid fa-bullhorn"></i>
+
                 </div>
-                <h2 class="text-3xl font-bold text-slate-800">{{ announcements.count }}</h2>
-                <h3 class="text-slate-500 font-medium text-sm mt-1">Announcements</h3>
+
+                <span class="text-xs font-bold text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">
+                    Taarifa
+                </span>
+
             </div>
+
+            <h2 class="text-3xl font-bold text-slate-800">
+                {{ announcements.count }}
+            </h2>
+
+            <h3 class="text-slate-500 font-medium text-sm mt-1">
+                Announcements
+            </h3>
+
             <div class="mt-6 pt-4 border-t border-slate-100">
-                <a href="/admin/auctions/announcement/" class="inline-flex items-center gap-2 text-amber-600 hover:text-amber-800 text-sm font-semibold transition-colors">
-                    Simamia Announcements <i class="fa-solid fa-arrow-right text-xs"></i>
+
+                <a
+                    href="/admin/auctions/announcement/"
+                    class="text-amber-600 text-sm font-semibold"
+                >
+                    Simamia Announcements
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
                 </a>
+
             </div>
+
         </div>
 
     </div>
 
-    <!-- NEW SECTION: USIMAMIZI WA MINADA NA KUFUNGA BIDHAA -->
+
+    <!-- ITEMS MANAGEMENT -->
+
     <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 mb-8">
+
         <div class="flex items-center justify-between mb-6">
+
             <div class="flex items-center gap-3">
+
                 <div class="w-10 h-10 bg-indigo-50 text-indigo-600 rounded-xl flex items-center justify-center text-lg">
+
                     <i class="fa-solid fa-gavel"></i>
+
                 </div>
-                <h2 class="text-xl font-bold text-slate-800">Usimamizi wa Bidhaa na Washindi</h2>
+
+                <h2 class="text-xl font-bold text-slate-800">
+                    Usimamizi wa Bidhaa na Washindi
+                </h2>
+
             </div>
-            <span class="text-xs bg-slate-100 text-slate-600 font-medium px-3 py-1 rounded-full">Jumla ya Bidhaa: {{ items.count }}</span>
+
+            <span class="text-xs bg-slate-100 text-slate-600 font-medium px-3 py-1 rounded-full">
+                Jumla ya Bidhaa: {{ items.count }}
+            </span>
+
         </div>
+
 
         <div class="space-y-4">
+
+
             {% for item in items %}
-                <div class="bg-slate-50/70 p-4 rounded-xl border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-slate-50 transition-all">
+
+
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+
+
                     <div>
-                        <h4 class="font-bold text-slate-800 text-base">{{ item.name }}</h4>
-                        <p class="text-xs text-slate-500 mt-0.5">Mnada: <span class="font-medium text-slate-700">{{ item.auction.title }}</span> | Bei ya Kuanzia: <span class="font-medium text-slate-700">TZS {{ item.starting_price|floatformat:2 }}</span></p>
-                        
+
+                        <h4 class="font-bold text-slate-800 text-base">
+                            {{ item.name }}
+                        </h4>
+
+                        <p class="text-xs text-slate-500 mt-1">
+
+                            Mnada:
+
+                            <span class="font-medium text-slate-700">
+                                {{ item.auction.title }}
+                            </span>
+
+                            |
+
+                            Bei ya Kuanzia:
+
+                            <span class="font-medium text-slate-700">
+                                TZS {{ item.starting_price|floatformat:2 }}
+                            </span>
+
+                        </p>
+
+
                         <div class="mt-2">
+
+
                             {% if item.is_sold %}
-                                <span class="bg-red-100 text-red-700 text-xs px-2.5 py-1 rounded-full font-semibold">Imefungwa</span>
+
+                                <span class="bg-red-100 text-red-700 text-xs px-2.5 py-1 rounded-full font-semibold">
+                                    Imefungwa
+                                </span>
+
+
                                 {% if item.winner %}
-                                    <span class="text-xs text-emerald-700 font-semibold ml-2">Mshindi: {{ item.winner.username }}</span>
+
+                                    <span class="text-xs text-emerald-700 font-semibold ml-2">
+
+                                        Mshindi:
+                                        {{ item.winner.username }}
+
+                                    </span>
+
                                 {% else %}
-                                    <span class="text-xs text-amber-600 font-semibold ml-2">Hakuna mshindi aliyepatikana</span>
+
+                                    <span class="text-xs text-amber-600 font-semibold ml-2">
+                                        Hakuna mshindi
+                                    </span>
+
                                 {% endif %}
+
+
                             {% else %}
-                                <span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-full font-semibold">Inaendelea (Live)</span>
+
+                                <span class="bg-emerald-100 text-emerald-700 text-xs px-2.5 py-1 rounded-full font-semibold">
+                                    Inaendelea (Live)
+                                </span>
+
                             {% endif %}
+
                         </div>
+
                     </div>
-                    
+
+
                     <div>
+
+
                         {% if not item.is_sold %}
-                            <a href="{% url 'close_bidding' item.id %}" onclick="return confirm('Una uhakika unataka kufunga mnada wa bidhaa hii?');" class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition-all shadow-sm">
-                                <i class="fa-solid fa-lock"></i> Funga Mnada & Pata Mshindi
-                            </a>
+
+
+                            <form
+                                method="post"
+                                action="{% url 'auctions:close_bidding' item.id %}"
+                            >
+
+                                {% csrf_token %}
+
+                                <button
+                                    type="submit"
+                                    onclick="return confirm('Una uhakika unataka kufunga mnada wa bidhaa hii?');"
+                                    class="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl"
+                                >
+
+                                    <i class="fa-solid fa-lock"></i>
+
+                                    Funga Mnada & Pata Mshindi
+
+                                </button>
+
+                            </form>
+
+
                         {% else %}
-                            <span class="text-xs text-slate-400 font-medium italic">Mnada umekwisha fungwa</span>
+
+
+                            <span class="text-xs text-slate-400 font-medium italic">
+                                Mnada umekwisha fungwa
+                            </span>
+
+
                         {% endif %}
+
+
                     </div>
+
                 </div>
+
+
             {% empty %}
-                <p class="text-slate-500 text-sm text-center py-4">Hakuna bidhaa zilizosajiliwa bado.</p>
+
+
+                <p class="text-slate-500 text-sm text-center py-4">
+                    Hakuna bidhaa zilizosajiliwa bado.
+                </p>
+
+
             {% endfor %}
+
         </div>
+
     </div>
 
-    <!-- Bottom Panels Grid -->
+
+    <!-- BOTTOM -->
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
+
         <!-- ADMIN PANEL -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between">
-            <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-sliders"></i>
-                    </div>
-                    <h2 class="text-xl font-bold text-slate-800">Django Administration</h2>
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+
+            <div class="flex items-center gap-3 mb-4">
+
+                <div class="w-10 h-10 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center text-lg">
+
+                    <i class="fa-solid fa-sliders"></i>
+
                 </div>
-                <p class="text-slate-500 text-sm">
-                    Fungua ukurasa kamili wa mfumo wa Django (Django Admin Panel) kwa ajili ya usimamizi wa kina wa database.
-                </p>
+
+                <h2 class="text-xl font-bold text-slate-800">
+                    Django Administration
+                </h2>
+
             </div>
+
+
+            <p class="text-slate-500 text-sm">
+                Fungua Django Admin Panel kwa ajili ya
+                usimamizi wa database.
+            </p>
+
+
             <div class="mt-6">
-                <a href="/admin/" class="inline-flex items-center justify-center gap-2 w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-4 rounded-xl transition-all shadow-sm">
-                    <i class="fa-solid fa-gear"></i> Fungua Admin Panel
+
+                <a
+                    href="/admin/"
+                    class="inline-flex items-center justify-center gap-2 w-full bg-slate-900 hover:bg-slate-800 text-white font-medium py-3 px-4 rounded-xl"
+                >
+
+                    <i class="fa-solid fa-gear"></i>
+
+                    Fungua Admin Panel
+
                 </a>
+
             </div>
+
         </div>
 
-        <!-- QUICK INFORMATION -->
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 flex flex-col justify-between">
-            <div>
-                <div class="flex items-center gap-3 mb-4">
-                    <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center text-lg">
-                        <i class="fa-solid fa-circle-user"></i>
-                    </div>
-                    <h2 class="text-xl font-bold text-slate-800">Taarifa za Akaunti</h2>
+
+        <!-- ACCOUNT -->
+
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-100">
+
+            <div class="flex items-center gap-3 mb-4">
+
+                <div class="w-10 h-10 bg-teal-50 text-teal-600 rounded-xl flex items-center justify-center text-lg">
+
+                    <i class="fa-solid fa-circle-user"></i>
+
                 </div>
-                <div class="space-y-2 text-sm text-slate-600">
-                    <p class="flex justify-between py-1 border-b border-slate-50">
-                        <span class="text-slate-400">Umeingia kama:</span>
-                        <strong class="text-slate-800">{{ user.username }}</strong>
-                    </p>
-                    <p class="flex justify-between py-1 border-b border-slate-50">
-                        <span class="text-slate-400">Aina ya Akaunti:</span>
-                        <span class="bg-emerald-100 text-emerald-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">Administrator</span>
-                    </p>
-                </div>
+
+                <h2 class="text-xl font-bold text-slate-800">
+                    Taarifa za Akaunti
+                </h2>
+
             </div>
+
+
+            <div class="space-y-2 text-sm text-slate-600">
+
+                <p class="flex justify-between py-1 border-b border-slate-50">
+
+                    <span class="text-slate-400">
+                        Umeingia kama:
+                    </span>
+
+                    <strong class="text-slate-800">
+                        {{ user.username }}
+                    </strong>
+
+                </p>
+
+
+                <p class="flex justify-between py-1 border-b border-slate-50">
+
+                    <span class="text-slate-400">
+                        Aina ya Akaunti:
+                    </span>
+
+                    <span class="bg-emerald-100 text-emerald-700 text-xs font-semibold px-2.5 py-0.5 rounded-full">
+                        Administrator
+                    </span>
+
+                </p>
+
+            </div>
+
+
             <div class="mt-6">
-                <a href="{% url 'home' %}" class="inline-flex items-center justify-center gap-2 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-3 px-4 rounded-xl transition-all">
-                    <i class="fa-solid fa-house"></i> Rudi Kurasa ya Nyumbani
+
+                <a
+                    href="{% url 'auctions:auction_list' %}"
+                    class="inline-flex items-center justify-center gap-2 w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium py-3 px-4 rounded-xl"
+                >
+
+                    <i class="fa-solid fa-house"></i>
+
+                    Rudi Kurasa ya Nyumbani
+
                 </a>
+
             </div>
+
         </div>
 
     </div>
