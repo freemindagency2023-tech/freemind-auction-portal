@@ -343,73 +343,48 @@ Auction Categories | Freemind Auction
 <div class="auction-page">
 
     <!-- HEADER -->
-
     <div class="auction-header">
-
         {% if selected_category_obj %}
-
             <h1>
-
                 {% if selected_category_obj.icon %}
                     {{ selected_category_obj.icon }}
                 {% endif %}
-
                 {{ selected_category_obj.name }}
-
             </h1>
 
             <p>
-
                 {% if selected_subcategory_obj %}
-
                     {{ selected_subcategory_obj.name }}
-
                 {% else %}
-
                     Browse all items in this category.
-
                 {% endif %}
-
             </p>
-
         {% else %}
-
             <h1>
                 Auction Categories
             </h1>
-
             <p>
                 Browse auction items by category.
             </p>
-
         {% endif %}
-
     </div>
 
 
     <!-- CATEGORY LIST -->
-
     {% if not selected_category_obj %}
-
         {% if categories %}
-
             <div class="category-grid">
-
                 {% for category in categories %}
-
                     <a
                         href="{% url 'auction_list' %}?category={{ category.id }}"
                         class="category-card"
                     >
-
                         <div class="category-icon">
-
                             {% if category.icon %}
                                 {{ category.icon }}
                             {% else %}
                                 📦
                             {% endif %}
-
                         </div>
 
                         <h2>
@@ -417,142 +392,92 @@ Auction Categories | Freemind Auction
                         </h2>
 
                         {% if category.description %}
-
                             <p>
                                 {{ category.description }}
                             </p>
-
                         {% else %}
-
                             <p>
                                 View auction items
                             </p>
-
                         {% endif %}
-
                     </a>
-
                 {% endfor %}
-
             </div>
-
         {% else %}
-
             <div class="empty-box">
-
                 <i class="fa-solid fa-layer-group"></i>
-
                 <h2>
                     No Categories Available
                 </h2>
-
                 <p>
                     There are currently no auction categories.
                 </p>
-
             </div>
-
         {% endif %}
-
     {% endif %}
 
 
     <!-- SELECTED CATEGORY -->
-
     {% if selected_category_obj %}
-
         <div class="selected-section">
 
             <div class="selected-title">
-
                 <i class="fa-solid fa-layer-group"></i>
-
                 <span>
                     {{ selected_category_obj.name }}
                 </span>
-
             </div>
-
 
             <a
                 href="{% url 'auction_list' %}"
                 class="all-category-button"
             >
-
                 <i class="fa-solid fa-arrow-left"></i>
-
                 All Categories
-
             </a>
 
-
             <!-- SUBCATEGORIES -->
-
             {% if subcategories %}
-
                 <div class="subcategory-grid">
-
                     {% for subcat in subcategories %}
-
                         <a
                             href="{% url 'auction_list' %}?category={{ selected_category_obj.id }}&subcategory={{ subcat.id }}"
                             class="subcategory-card {% if selected_subcategory_obj and selected_subcategory_obj.id == subcat.id %}active{% endif %}"
                         >
-
                             <h3>
                                 {{ subcat.name }}
                             </h3>
 
                             {% if subcat.description %}
-
                                 <p>
                                     {{ subcat.description }}
                                 </p>
-
                             {% endif %}
-
                         </a>
-
                     {% endfor %}
-
                 </div>
-
             {% endif %}
 
 
             <!-- ITEMS TITLE -->
-
             <h2 class="items-title">
-
                 {% if selected_subcategory_obj %}
-
                     Items in {{ selected_subcategory_obj.name }}
-
                 {% else %}
-
                     All Items in {{ selected_category_obj.name }}
-
                 {% endif %}
-
             </h2>
 
 
             <!-- ITEMS -->
-
             {% if items %}
-
                 <div class="items-grid">
-
                     {% for item in items %}
-
                         <div class="item-card">
 
                             <!-- PRIMARY IMAGE -->
-
                             {% if item.image %}
-
                                 <div class="item-image-wrapper">
-
                                     <img
                                         src="{{ item.image.url }}"
                                         alt="{{ item.name }}"
@@ -560,170 +485,105 @@ Auction Categories | Freemind Auction
                                     >
 
                                     {% if item.images.all %}
-
                                         <span class="image-count">
-
                                             <i class="fa-solid fa-images"></i>
-
                                             {{ item.images.count|add:"1" }}
-
                                             picha
-
                                         </span>
-
                                     {% endif %}
-
                                 </div>
-
                             {% else %}
-
                                 {% if item.images.all %}
-
                                     <div class="item-image-wrapper">
-
                                         <img
                                             src="{{ item.images.all.0.image.url }}"
                                             alt="{{ item.name }}"
                                             class="item-image"
                                         >
-
                                         <span class="image-count">
-
                                             <i class="fa-solid fa-images"></i>
-
                                             {{ item.images.count }}
                                             picha
-
                                         </span>
-
                                     </div>
-
                                 {% else %}
-
                                     <div class="no-image">
-
                                         <i class="fa-solid fa-image"></i>
-
                                         <span>
                                             No Image
                                         </span>
-
                                     </div>
-
                                 {% endif %}
-
                             {% endif %}
 
 
                             <!-- ITEM INFORMATION -->
-
                             <div class="item-content">
-
                                 <h3>
                                     {{ item.name }}
                                 </h3>
 
-
                                 {% if item.condition %}
-
                                     <div class="condition">
                                         {{ item.condition }}
                                     </div>
-
                                 {% endif %}
-
 
                                 {% if item.description %}
-
                                     <p class="item-description">
-
                                         {{ item.description|truncatechars:90 }}
-
                                     </p>
-
                                 {% endif %}
 
-
                                 <div class="item-meta">
-
                                     <div class="item-meta-row">
-
                                         <span class="meta-label">
                                             Starting Price
                                         </span>
-
                                         <span class="meta-value price">
-
-                                            TZS
-                                            {{ item.starting_price|floatformat:2 }}
-
+                                            TZS {{ item.starting_price|floatformat:2 }}
                                         </span>
-
                                     </div>
 
-
                                     <div class="item-meta-row">
-
                                         <span class="meta-label">
                                             Auction
                                         </span>
-
                                         <span class="meta-value">
-
                                             {{ item.auction.title|truncatechars:25 }}
-
                                         </span>
-
                                     </div>
-
                                 </div>
 
-
                                 <!-- VIEW AUCTION -->
-
                                 <a
                                     href="{% url 'auction_detail' item.auction.id %}"
                                     class="auction-button"
                                 >
-
                                     View Auction
-
                                     <i
                                         class="fa-solid fa-arrow-right"
                                         style="margin-left:5px;"
                                     ></i>
-
                                 </a>
-
                             </div>
 
                         </div>
-
                     {% endfor %}
-
                 </div>
-
             {% else %}
-
                 <div class="empty-box">
-
                     <i class="fa-solid fa-box-open"></i>
-
                     <h2>
                         No Items Found
                     </h2>
-
                     <p>
-                        There are currently no items listed
-                        in this category/subcategory.
+                        There are currently no items listed in this category/subcategory.
                     </p>
-
                 </div>
-
             {% endif %}
 
         </div>
-
     {% endif %}
 
 </div>
