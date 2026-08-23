@@ -9,7 +9,7 @@ app_name = "auctions"
 urlpatterns = [
 
     # =====================================================
-    # AUTHENTICATION (Register & Password Reset)
+    # AUTHENTICATION
     # =====================================================
 
     path(

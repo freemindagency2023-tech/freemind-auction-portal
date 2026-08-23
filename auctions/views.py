@@ -69,11 +69,11 @@ class CustomLoginView(LoginView):
         ):
 
             return redirect(
-                "admin_dashboard"
+                "auctions:admin_dashboard"
             )
 
         return redirect(
-            "dashboard"
+            "auctions:dashboard"
         )
 
 
@@ -598,7 +598,7 @@ def add_item(request):
 
 
             return redirect(
-                "admin_dashboard"
+                "auctions:admin_dashboard"
             )
 
 
@@ -657,7 +657,7 @@ def place_bid(
 
 
         return redirect(
-            "item_detail",
+            "auctions:item_detail",
             item_id=item.id
         )
 
@@ -718,7 +718,7 @@ def place_bid(
 
 
                 return redirect(
-                    "item_detail",
+                    "auctions:item_detail",
                     item_id=item.id
                 )
 
@@ -808,7 +808,7 @@ def close_bidding(
 
 
     return redirect(
-        "admin_dashboard"
+        "auctions:admin_dashboard"
     )
 
 
@@ -825,7 +825,7 @@ def dashboard(request):
     ):
 
         return redirect(
-            "admin_dashboard"
+            "auctions:admin_dashboard"
         )
 
 
@@ -875,12 +875,12 @@ def dashboard_redirect(request):
     ):
 
         return redirect(
-            "admin_dashboard"
+            "auctions:admin_dashboard"
         )
 
 
     return redirect(
-        "dashboard"
+        "auctions:dashboard"
     )
 
 
@@ -897,7 +897,7 @@ def admin_dashboard(request):
     ):
 
         return redirect(
-            "dashboard"
+            "auctions:dashboard"
         )
 
 
@@ -990,7 +990,7 @@ def edit_bid(
 
 
         return redirect(
-            "dashboard"
+            "auctions:dashboard"
         )
 
 
@@ -1045,7 +1045,7 @@ def edit_bid(
 
 
                 return redirect(
-                    "dashboard"
+                    "auctions:dashboard"
                 )
 
 
@@ -1094,7 +1094,7 @@ def delete_bid(
 
 
         return redirect(
-            "dashboard"
+            "auctions:dashboard"
         )
 
 
@@ -1111,7 +1111,7 @@ def delete_bid(
 
 
         return redirect(
-            "dashboard"
+            "auctions:dashboard"
         )
 
 
@@ -1201,12 +1201,12 @@ def register(request):
         ):
 
             return redirect(
-                "admin_dashboard"
+                "auctions:admin_dashboard"
             )
 
 
         return redirect(
-            "dashboard"
+            "auctions:dashboard"
         )
 
 
@@ -1232,7 +1232,7 @@ def register(request):
 
 
             return redirect(
-                "login"
+                "auctions:login"
             )
 
 
