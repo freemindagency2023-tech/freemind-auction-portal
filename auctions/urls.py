@@ -9,8 +9,14 @@ app_name = "auctions"
 urlpatterns = [
 
     # =====================================================
-    # AUTHENTICATION (Password Reset)
+    # AUTHENTICATION (Register & Password Reset)
     # =====================================================
+
+    path(
+        "register/",
+        views.register,
+        name="register",
+    ),
 
     path(
         "password-reset/",
