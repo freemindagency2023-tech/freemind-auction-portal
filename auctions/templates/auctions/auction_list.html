@@ -376,7 +376,7 @@ Auction Categories | Freemind Auction
             <div class="category-grid">
                 {% for category in categories %}
                     <a
-                        href="{% url 'auction_list' %}?category={{ category.id }}"
+                        href="{% url 'auctions:auction_list' %}?category={{ category.id }}"
                         class="category-card"
                     >
                         <div class="category-icon">
@@ -429,7 +429,7 @@ Auction Categories | Freemind Auction
             </div>
 
             <a
-                href="{% url 'auction_list' %}"
+                href="{% url 'auctions:auction_list' %}"
                 class="all-category-button"
             >
                 <i class="fa-solid fa-arrow-left"></i>
@@ -441,7 +441,7 @@ Auction Categories | Freemind Auction
                 <div class="subcategory-grid">
                     {% for subcat in subcategories %}
                         <a
-                            href="{% url 'auction_list' %}?category={{ selected_category_obj.id }}&subcategory={{ subcat.id }}"
+                            href="{% url 'auctions:auction_list' %}?category={{ selected_category_obj.id }}&subcategory={{ subcat.id }}"
                             class="subcategory-card {% if selected_subcategory_obj and selected_subcategory_obj.id == subcat.id %}active{% endif %}"
                         >
                             <h3>
@@ -557,7 +557,7 @@ Auction Categories | Freemind Auction
 
                                 <!-- VIEW AUCTION -->
                                 <a
-                                    href="{% url 'auction_detail' item.auction.id %}"
+                                    href="{% url 'auctions:auction_detail' item.auction.id %}"
                                     class="auction-button"
                                 >
                                     View Auction
