@@ -9,45 +9,42 @@ from auctions import views
 
 urlpatterns = [
 
-    # ADMIN
+    # =====================================================
+    # DJANGO ADMIN
+    # =====================================================
+
     path(
         "admin/",
         admin.site.urls
     ),
 
+
+    # =====================================================
+    # GLOBAL LOGOUT
+    # =====================================================
+
+    path(
+        "logout/",
+        auth_views.LogoutView.as_view(
+            next_page="/login/"
+        ),
+        name="logout",
+    ),
+
+
+    # =====================================================
     # AUCTIONS APP
+    # =====================================================
+
     path(
         "",
         include("auctions.urls")
     ),
 
-    # LOGIN
-    path(
-        "accounts/login/",
-        views.CustomLoginView.as_view(),
-        name="login",
-    ),
-
-    # LOGOUT
-    path(
-        "accounts/logout/",
-        auth_views.LogoutView.as_view(
-            next_page="/accounts/login/"
-        ),
-        name="logout",
-    ),
-
-    # REGISTER
-    path(
-        "accounts/register/",
-        views.register,
-        name="register",
-    ),
 ]
 
 
 if settings.DEBUG:
-
     urlpatterns += static(
         settings.MEDIA_URL,
         document_root=settings.MEDIA_ROOT
