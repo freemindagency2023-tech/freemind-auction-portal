@@ -34,14 +34,14 @@ urlpatterns = [
 
     path(
         "",
-        include("auctions.urls", namespace="auctions")
+        include("auctions.urls")
     ),
 
 ]
 
 
 # =====================================================
-# MEDIA AND STATIC FILES (DEVELOPMENT ONLY)
+# MEDIA AND STATIC FILES
 # =====================================================
 
 if settings.DEBUG:
