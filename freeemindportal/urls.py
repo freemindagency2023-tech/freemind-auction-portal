@@ -4,8 +4,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 
-from auctions import views
-
 
 urlpatterns = [
 
@@ -18,7 +16,6 @@ urlpatterns = [
         admin.site.urls
     ),
 
-
     # =====================================================
     # GLOBAL LOGOUT
     # =====================================================
@@ -26,11 +23,10 @@ urlpatterns = [
     path(
         "logout/",
         auth_views.LogoutView.as_view(
-            next_page="/login/"
+            next_page="/accounts/login/"
         ),
         name="logout",
     ),
-
 
     # =====================================================
     # AUCTIONS APP
@@ -38,11 +34,15 @@ urlpatterns = [
 
     path(
         "",
-        include("auctions.urls")
+        include("auctions.urls", namespace="auctions")
     ),
 
 ]
 
+
+# =====================================================
+# MEDIA AND STATIC FILES (DEVELOPMENT ONLY)
+# =====================================================
 
 if settings.DEBUG:
     urlpatterns += static(
