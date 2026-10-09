@@ -1150,4 +1150,12 @@ def register(request):
 
     else:
 
-        form = Register
+        form = RegisterForm()  # Hapa ndipo palikuwa na kosa (lilikuwa limeandikwa Register peke yake)
+
+    return render(
+        request,
+        "registration/register.html",
+        {
+            "form": form,
+        }
+    )
